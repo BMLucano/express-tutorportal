@@ -7,7 +7,7 @@ CREATE TABLE users (
         CHECK (position('@' IN email) > 1),
     role VARCHAR(10) NOT NULL
         CHECK (role IN('tutor', 'student'))
-)
+);
 
 CREATE TABLE assignments (
     id SERIAL PRIMARY KEY,
@@ -16,7 +16,7 @@ CREATE TABLE assignments (
     due_date timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone NOT NUll DEFAULT CURRENT_TIMESTAMP
-)
+);
 
 CREATE TABLE assignments_students (
     id SERIAL PRIMARY KEY,
@@ -25,7 +25,7 @@ CREATE TABLE assignments_students (
     student_username VARCHAR(25) NOT NULL
         REFERENCES users ON DELETE CASCADE,
     status VARCHAR(20) DEFAULT 'assigned'
-)
+);
 
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
@@ -33,7 +33,7 @@ CREATE TABLE questions (
         REFERENCES assignments ON DELETE CASCADE,
     question_text TEXT NOT NULL,
     answer_text TEXT NOT NULL
-)
+);
 
 CREATE TABLE submissions (
     id SERIAL PRIMARY KEY,
@@ -47,6 +47,44 @@ CREATE TABLE submissions (
     feedback TEXT,
     submitted_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT uq_submission UNIQUE (student_username, assignment_id, question_id)
-)
+);
 
--- TODO: resources, sessions, notes, messages
+CREATE TABLE notes (
+    id SERIAL PRIMARY KEY,
+    student_username VARCHAR(25) NOT NULL
+        REFERENCES users ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    content_path TEXT,  -- store the file path instead of binary data
+    session_id INTEGER REFERENCES sessions (id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE resources (
+    id SERIAL PRIMARY KEY,
+    student_username VARCHAR(25) NOT NULL
+        REFERENCES users (username) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    url TEXT NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sessions (
+    id SERIAL PRIMARY KEY,
+    student_username VARCHAR(25) NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    duration INTERVAL NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    sender_username VARCHAR(25) NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    receiver_username VARCHAR(25) NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
