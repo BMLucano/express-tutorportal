@@ -30,3 +30,10 @@ ${"CRYPT_WORK_FACTOR:".yellow} ${BCRYPT_WORK_FACTOR}
 ${"Database:".yellow}           ${getDatabaseUri()}
 ---`);
 }
+
+export {
+  SECRET_KEY,
+  PORT,
+  BCRYPT_WORK_FACTOR,
+  getDatabaseUri,
+};
