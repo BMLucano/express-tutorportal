@@ -44,7 +44,7 @@ class User {
    *
    * @returns {User[]} - List of all user data
    */
-  async getAllUsers(): Promise<UserData[]> {}
+  async getAll(): Promise<UserData[]> {}
 
 
   /**
@@ -56,7 +56,7 @@ class User {
    *
    * @throws NotFoundError - if user not found
    */
-  async getUserByUsername(username: string): Promise<UserData> {}
+  async get(username: string): Promise<UserData> {}
 
   //TODO: figure out what to do with this function
   /** Given a username, get dashboard data by calling assignment,

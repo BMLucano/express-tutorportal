@@ -9,7 +9,7 @@ class Assignment {
    * @returns {AssignmentData} - Created assignment
    * @throws {BadRequestError} - if assignment already exists in db
    */
-  async createAssignment(data: AssignmentDataToCreate): Promise<AssignmentData> {}
+  async create(data: AssignmentDataToCreate): Promise<AssignmentData> {}
 
   /**
    * Update assignment with partial data.
@@ -18,7 +18,7 @@ class Assignment {
    * @returns {Assignment} - Updated assignment
    * @throws {NotFoundError} - if assignment not found
    */
-  async updateAssignment(data: Partial<AssignmentDataToCreate>): Promise<AssignmentData> {}
+  async update(data: Partial<AssignmentDataToCreate>): Promise<AssignmentData> {}
 
   /**
    * Delete an assignment from database by id.
@@ -27,7 +27,7 @@ class Assignment {
    * @returns {undefined}
    * @throws {NotFoundError} - if assignment not found
    */
-  async deleteAssignment(id: number): Promise<void> {}
+  async delete(id: number): Promise<void> {}
 
   /**
    * Get a single assignment by id.
@@ -36,7 +36,7 @@ class Assignment {
    * @returns {Assignment} - Retrieved assignment
    * @throws {NotFoundError} - if assignment not found
    */
-  async getAssignment(id: number): Promise<AssignmentData> {}
+  async get(id: number): Promise<AssignmentData> {}
 
   /**
    * Get all assignments for a student.
@@ -45,7 +45,7 @@ class Assignment {
    * @returns {Assignment[]} - Retrieved assignments
    * @throws {NotFoundError} - if no student found
    */
-  async getAssignments(studentUsername: string): Promise<AssignmentData[]> {}
+  async getAllByStudent(studentUsername: string): Promise<AssignmentData[]> {}
 
   /**
    * Get assignments by status and student.
@@ -55,7 +55,7 @@ class Assignment {
    * @returns {Assignment[]} - Retrieved assignments
    * @throws {NotFoundError} - if no student found
    */
-  async getAssignmentsByStatusAndStudent(
+  async getAssignmentsByStatus(
     status: string,
     studentUsername: string
   ): Promise<Assignment[]> {}
