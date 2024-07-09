@@ -81,13 +81,25 @@ async function commonBeforeAll() {
   ]);
   testSubmissionIds.push(...resultsSubmissions.rows.map(({ id }) => id));
 
-  // Insert data into notes table
-  const resultsNotes = await db.query(`
-    INSERT INTO notes(student_username, title, content_path)
-    VALUES ($1, 'Note1', 'path1'),
-           ($2, 'Note2', 'path2')`, [
+  // Insert data into sessions table
+  const resultsSessions = await db.query(`
+    INSERT INTO sessions(student_username, date, time, duration, notes)
+    VALUES ($1, '2023-07-01', '10:00', '01:00', 'Notes1'),
+           ($2, '2023-07-02', '11:00', '02:00', 'Notes2')`, [
     testUserIds[0],
     testUserIds[1],
+  ]);
+  testSessionIds.push(...resultsSessions.rows.map(({ id }) => id));
+
+  // Insert data into notes table
+  const resultsNotes = await db.query(`
+    INSERT INTO notes(student_username, title, content_path, session_id)
+    VALUES ($1, 'Note1', 'path1', $2),
+           ($3, 'Note2', 'path2', $4)`, [
+    testUserIds[0],
+    testSessionIds[0],
+    testUserIds[1],
+    testSessionIds[1]
   ]);
   testNoteIds.push(...resultsNotes.rows.map(({ id }) => id));
 
@@ -101,15 +113,6 @@ async function commonBeforeAll() {
   ]);
   testResourceIds.push(...resultsResources.rows.map(({ id }) => id));
 
-  // Insert data into sessions table
-  const resultsSessions = await db.query(`
-    INSERT INTO sessions(student_username, date, time, duration, notes)
-    VALUES ($1, '2023-07-01', '10:00', '01:00', 'Notes1'),
-           ($2, '2023-07-02', '11:00', '02:00', 'Notes2')`, [
-    testUserIds[0],
-    testUserIds[1],
-  ]);
-  testSessionIds.push(...resultsSessions.rows.map(({ id }) => id));
 
   // Insert data into messages table
   const resultsMessages = await db.query(`
