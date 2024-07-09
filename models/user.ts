@@ -45,6 +45,28 @@ class User {
    */
 
 
+  /** Given a username, get dashboard data by calling assignment,
+   * resource, session, and message models.
+   * @param {string} username
+   *
+   * Returns
+  */
+
+  // async getUserDashboard(username) {
+  //   const user = await User.get(username);
+  //   const nextSession = await Session.getNextSession(username);
+  //   const recentAssignments = await Assignment.getAssignmentsByStatus(username, 'assigned');
+  //   const recentResources = await Resource.getRecentResources(username);
+  //   const unreadMessages = await Message.getUnreadMessages(username);
+
+  //   return {
+  //     user,
+  //     nextSession,
+  //     recentAssignment,
+  //     recentResources,
+  //     unreadMessages,
+  //   };
+  // }
   //TODO: functions for updating data and resetting password?
 }
 

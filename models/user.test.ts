@@ -175,3 +175,5 @@ describe("get", function () {
     }
   });
 });
+
+//TODO: tests for getUserDashboard, update, resetPassword
