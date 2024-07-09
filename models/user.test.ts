@@ -7,6 +7,8 @@ import {
 
 import db from "../db";
 import User from "./user";
+import { afterAll, beforeAll } from "vitest";
+import { afterEach, beforeEach } from "node:test";
 
 import {
   commonBeforeAll,
@@ -23,8 +25,6 @@ import {
   testMessageIds,
   testAssignmentsStudentsIds,
 } from "./_testCommon";
-import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "node:test";
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);

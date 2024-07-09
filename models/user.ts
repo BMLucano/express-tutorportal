@@ -1,20 +1,22 @@
-
-/**Functions for user model */
+/** Functions for user model */
 
 class User {
 
-  /** Authenticate a user with usename and password
+  /**
+   * Authenticate a user with username and password.
    *
    * @param {string} username
    * @param {string} password
    *
-   * Returns { username, firstName, lastName, email, role }
+   * @returns {UserData} - Authenticated user data
    *
-   * Throws UnauthorizedError if user is not found or wrong password.
+   * @throws UnauthorizedError - if user is not found or wrong password
    */
+  async authenticate(username: string, password: string): Promise<UserData> {}
 
 
-  /** Register a user with new data.
+  /**
+   * Register a user with new data.
    *
    * @param {string} username
    * @param {string} password
@@ -23,28 +25,40 @@ class User {
    * @param {string} email
    * @param {string} role
    *
-   * Returns { username, firstName, lastName, email, role }
+   * @returns {UserData} - Created user data
    *
-   * Throws BadRequestError for duplicates.
+   * @throws BadRequestError - for duplicates
    */
+  async register(
+    username: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    role: string
+  ): Promise<UserData> {}
 
 
-  /** Find all users.
+  /**
+   * Find all users.
    *
-   * Returns list of all user data: [{ username, firstName, lastName, email, role }...]
+   * @returns {User[]} - List of all user data
    */
+  async getAllUsers(): Promise<UserData[]> {}
 
 
-  /**Given a username, return data about that user.
+  /**
+   * Get user data by username.
    *
    * @param {string} username
    *
-   * Returns { username, firstName, lastName, email, role}
+   * @returns {User} - User data
    *
-   * Throws NotFoundError if user not found.
+   * @throws NotFoundError - if user not found
    */
+  async getUserByUsername(username: string): Promise<UserData> {}
 
-
+  //TODO: figure out what to do with this function
   /** Given a username, get dashboard data by calling assignment,
    * resource, session, and message models.
    * @param {string} username
@@ -69,5 +83,13 @@ class User {
   // }
   //TODO: functions for updating data and resetting password?
 }
+
+type UserData = {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+};
 
 export default User;
