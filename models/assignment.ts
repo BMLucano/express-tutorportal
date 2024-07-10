@@ -30,45 +30,23 @@ class Assignment {
    */
   static async delete(id: number): Promise<void> {}
 
-  /**
-   * Get a single assignment by id.
+ /**
+   * Get a single assignment by id, including questions.
    *
    * @param {number} id - Assignment id to retrieve
-   * @returns {AssignmentData} - Retrieved assignment
+   * @returns {AssignmentDataWithQuestions} - Retrieved assignment with questions
    * @throws {NotFoundError} - if assignment not found
    */
-  static async get(id: number): Promise<AssignmentData> {}
+  static async get(id: number): Promise<AssignmentDataWithQuestions> {}
 
   /**
-   * Get all assignments.
+   * Get all assignments, including questions.
    *
-   * @returns {AssignmentData[]} - Retrieved assignments
+   * @returns {AssignmentDataWithQuestions[]} - Retrieved assignments with questions
    */
-    static async getAll(): Promise<AssignmentData[]> {}
+  static async getAll(): Promise<AssignmentDataWithQuestions[]> {}
 
 
-  /**
-   * Get all assignments for a student.
-   *
-   * @param {string} studentUsername - Student username to retrieve assignments for
-   * @returns {AssignmentData[]} - Retrieved assignments
-   * @throws {NotFoundError} - if no student found
-   */
-  static async getAllByStudent(studentUsername: string): Promise<AssignmentData[]> {}
-
-  /**
-   * Get assignments by status and student.
-   * (use for dashboard - get 'assigned' assignments to include)
-   *
-   * @param {string} status - Assignment status to filter by
-   * @param {string} studentUsername - Student username to retrieve assignments for
-   * @returns {AssignmentData[]} - Retrieved assignments
-   * @throws {NotFoundError} - if no student found
-   */
-  static async getAssignmentsByStatus(
-    status: string,
-    studentUsername: string
-  ): Promise<AssignmentData[]> {}
 }
 
 type AssignmentDataToCreate = {
@@ -88,6 +66,14 @@ type AssignmentData = {
   title: string;
   description: string;
   dueDate: Date;
+};
+
+type AssignmentDataWithQuestions = {
+  id: number;
+  title: string;
+  description: string;
+  dueDate: Date;
+  questions: QuestionData[];
 };
 
 export default Assignment;
