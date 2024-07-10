@@ -80,3 +80,5 @@ type AssignmentStudentData = {
   studentUsername: string;
   status: string;
 };
+
+export default AssignmentStudent;
