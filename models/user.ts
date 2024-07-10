@@ -12,7 +12,7 @@ class User {
    *
    * @throws UnauthorizedError - if user is not found or wrong password
    */
-  async authenticate(username: string, password: string): Promise<UserData> {}
+  static async authenticate(username: string, password: string): Promise<UserData> {}
 
 
   /**
@@ -29,7 +29,7 @@ class User {
    *
    * @throws BadRequestError - for duplicates
    */
-  async register(
+  static async register(
     username: string,
     password: string,
     firstName: string,
@@ -44,19 +44,19 @@ class User {
    *
    * @returns {User[]} - List of all user data
    */
-  async getAll(): Promise<UserData[]> {}
+  static async getAll(): Promise<UserData[]> {}
 
 
   /**
    * Get user data by username.
-   *
+   *static
    * @param {string} username
    *
    * @returns {User} - User data
    *
    * @throws NotFoundError - if user not found
    */
-  async get(username: string): Promise<UserData> {}
+  static async get(username: string): Promise<UserData> {}
 
   //TODO: figure out what to do with this function
   /** Given a username, get dashboard data by calling assignment,

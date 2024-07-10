@@ -31,7 +31,7 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/************ auth tests */
+/************ auth */
 
 describe("authenticate", function () {
   test("works", async function () {
@@ -75,7 +75,7 @@ describe("authenticate", function () {
   });
 });
 
-/************ register tests */
+/************ register */
 
 describe("register", function () {
   const newUser = {
