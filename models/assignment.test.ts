@@ -2,7 +2,6 @@ import { describe, test, it, expect } from "vitest";
 import { NotFoundError, BadRequestError } from "../expressError";
 
 import db from "../db";
-import User from "./user";
 import Assignment from "./assignment";
 
 import { afterAll, beforeAll } from "vitest";
@@ -31,7 +30,10 @@ describe("create", function () {
 
   test("works", async function () {
     let assignment = await Assignment.create(newAssignment);
-    expect(assignment).toEqual(newAssignment);
+    expect(assignment).toEqual({
+      ...newAssignment,
+      id: expect.any(Number),
+    });
 
     const result = await db.query(
       `SELECT title, description, due_date
@@ -162,6 +164,7 @@ describe("get", function () {
       title: "Assignment1",
       description: "Desc1",
       dueDate: new Date("2023-07-01"),
+      questions: expect.any(Array),
     });
   });
 
@@ -187,12 +190,14 @@ describe("getAll", function () {
         title: "Assignment1",
         description: "Desc1",
         dueDate: new Date("2023-07-01"),
+        questions: expect.any(Array),
       },
       {
         id: 2,
         title: "Assignment2",
         description: "Desc2",
         dueDate: new Date("2023-07-02"),
+        questions: expect.any(Array),
       },
     ]);
   });
@@ -207,53 +212,3 @@ describe("getAll", function () {
 });
 
 
-/************** getAllByStudent */
-
-describe("getAllByStudent", function () {
-  test("works", async function () {
-    let assignments = await Assignment.getAllByStudent("u1");
-    expect(assignments).toEqual([
-      {
-        id: 1,
-        title: "Assignment1",
-        description: "Desc1",
-        dueDate: new Date("2023-07-01"),
-      },
-    ]);
-  });
-
-  test("not found", async function () {
-    try {
-      await Assignment.getAllByStudent("u3");
-      throw new Error("fail test, you shouldn't get here");
-    } catch (err) {
-      expect(err instanceof NotFoundError).toBeTruthy();
-    }
-  });
-});
-
-
-/*************** getAssignmentByStatus */
-
-describe("getAssignmentsByStatus", function () {
-  test("works", async function () {
-    let assignments = await Assignment.getAssignmentsByStatus("assigned", "u1");
-    expect(assignments).toEqual([
-      {
-        id: 1,
-        title: "Assignment1",
-        description: "Desc1",
-        dueDate: new Date("2023-07-01"),
-      },
-    ]);
-  });
-
-  test("not found", async function () {
-    try {
-      await Assignment.getAssignmentsByStatus("assigned", "u3");
-      throw new Error("fail test, you shouldn't get here");
-    } catch (err) {
-      expect(err instanceof NotFoundError).toBeTruthy();
-    }
-  });
-});
