@@ -31,6 +31,16 @@ describe("assign", function () {
       studentUsername: "u1",
       status: "assigned",
     });
+
+    const result = await db.query(`SELECT * FROM assignments_students WHERE assignment_id = 1 AND student_username = 'u1'`);
+    expect(result.rows).toEqual([
+      {
+        id: expect.any(Number),
+        assignment_id: 1,
+        student_username: 'u1',
+        status: 'assigned'
+      }
+    ]);
   });
 
   test("not found if student not found", async function () {
@@ -55,6 +65,16 @@ describe("updateStatus", function () {
       studentUsername: "u1",
       status: "in progress",
     });
+
+    const result = await db.query(`SELECT * FROM assignments_students WHERE assignment_id = 1 AND student_username = 'u1'`);
+    expect(result.rows).toEqual([
+      {
+        id: expect.any(Number),
+        assignment_id: 1,
+        student_username: 'u1',
+        status: 'in progress'
+      }
+    ]);
   });
 
   test("not found if student not found", async function () {
