@@ -36,7 +36,7 @@ class Session {
    * @returns {SessionData} - The session data
    * @throws {NotFoundError} - if session not found
    */
-  static async getById(id: number): Promise<SessionData>{}
+  static async get(id: number): Promise<SessionData>{}
 
 
   /**
@@ -54,7 +54,7 @@ class Session {
    *
    * @returns {SessionData[]} - a list of all sessions
    */
-  static async getAllSessions(): Promise<SessionData[]>{}
+  static async getAll(): Promise<SessionData[]>{}
 }
 
 type SessionDataToUpdate = {

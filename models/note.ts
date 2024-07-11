@@ -43,6 +43,12 @@ class Note {
   static async get(id: number): Promise<NoteData>{}
 
   /**
+   * Get all notes.
+   * @returns {NoteData[]} - note
+   */
+    static async getAll(): Promise<NoteData[]>{}
+
+  /**
    * Gets notes based on student.
    *
    * @param {string} studentUsername

@@ -150,6 +150,37 @@ describe("get", function () {
   });
 });
 
+
+/*************** getAll */
+
+describe("getAll", function () {
+  test("works", async function () {
+    let resources = await Resource.getAll();
+    expect(resources).toEqual([
+      {
+        id: 1,
+        studentUsername: "u1",
+        title: "Resource1",
+        url: "url1",
+        description: "This is resource 1",
+      },
+      {
+        id: 2,
+        studentUsername: "u1",
+        title: "Resource2",
+        url: "url2",
+        description: "This is resource 2",
+      },
+    ]);
+  });
+
+  test("empty array if no resources", async function () {
+    // assume no resources in the database
+    let resources = await Resource.getAll();
+    expect(resources).toEqual([]);
+  });
+});
+
 /**************** getResourcesByStudent */
 
 describe("getResourcesByStudent", function () {

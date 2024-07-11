@@ -40,7 +40,14 @@ class Resource {
    * @returns {ResourceData} - Resource
    * @throws {NotFoundError} - if resource not found
    */
-  static async get(id: number): Promise<ResourceDataData>{}
+  static async get(id: number): Promise<ResourceData>{}
+
+  /**
+   * Gets all resources.
+   *
+   * @returns {ResourceData[]} - a list of all sessions
+   */
+    static async getAll(): Promise<ResourceData[]>{}
 
 
   /**

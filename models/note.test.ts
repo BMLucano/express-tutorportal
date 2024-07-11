@@ -149,6 +149,38 @@ describe("get", function () {
   });
 });
 
+
+/*************** getAll */
+
+describe("getAll", function () {
+  test("works", async function () {
+    let notes = await Note.getAll();
+    expect(notes).toEqual([
+      {
+        id: 1,
+        studentUsername: "u1",
+        title: "Note1",
+        contentPath: "path1",
+        sessionId: 1,
+      },
+      {
+        id: 2,
+        studentUsername: "u1",
+        title: "Note2",
+        contentPath: "path2",
+        sessionId: 1,
+      },
+    ]);
+  });
+
+  test("empty array if no notes", async function () {
+    // assume no notes in the database
+    let notes = await Note.getAll();
+    expect(notes).toEqual([]);
+  });
+});
+
+
 /**************** getNotesByStudent */
 
 describe("getNotesByStudent", function () {
