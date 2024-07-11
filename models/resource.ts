@@ -33,6 +33,15 @@ class Resource {
    */
   static async delete(id: number): Promise<void>{}
 
+  /**
+   * Get a single resource by id.
+   *
+   * @param {number} id - Resource id to retrieve
+   * @returns {ResourceData} - Resource
+   * @throws {NotFoundError} - if resource not found
+   */
+  static async get(id: number): Promise<ResourceDataData>{}
+
 
   /**
    * Gets resources based on student.

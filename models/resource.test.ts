@@ -68,7 +68,7 @@ describe("create", function () {
 describe("update", function () {
   const updateData = {
     title: "New Title",
-    url: "www.newexample.com",
+    url: "newurl1",
   };
 
   test("works", async function () {
@@ -89,7 +89,7 @@ describe("update", function () {
       {
         student_username: "u1",
         title: "New Title",
-        url: "www.newexample.com",
+        url: "newurl1",
         description: "This is a resource",
       },
     ]);
@@ -126,6 +126,30 @@ describe("delete", function () {
 });
 
 
+/*************** get */
+
+describe("get", function () {
+  test("works", async function () {
+    let resource = await Resource.get(1);
+    expect(resource).toEqual({
+      id: 1,
+      studentUsername: "u1",
+      title: "Resource1",
+      url: "url1",
+      description: "This is a resource",
+    });
+  });
+
+  test("not found", async function () {
+    try {
+      await Resource.get(999);
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
+
 /**************** getResourcesByStudent */
 
 describe("getResourcesByStudent", function () {
@@ -136,7 +160,7 @@ describe("getResourcesByStudent", function () {
         id: 1,
         studentUsername: "u1",
         title: "Resource1",
-        url: "www.example.com",
+        url: "url1",
         description: "This is a resource",
       },
     ]);

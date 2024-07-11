@@ -33,6 +33,14 @@ class Note {
    */
   static async delete(id: number): Promise<void>{}
 
+  /**
+   * Get a single note by id.
+   *
+   * @param {number} id - Note id to retrieve
+   * @returns {NoteData} - note
+   * @throws {NotFoundError} - if note not found
+   */
+  static async get(id: number): Promise<NoteData>{}
 
   /**
    * Gets notes based on student.

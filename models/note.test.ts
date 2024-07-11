@@ -125,6 +125,30 @@ describe("delete", function () {
 });
 
 
+/***************** get */
+
+describe("get", function () {
+  test("works", async function () {
+    let note = await Note.get(1);
+    expect(note).toEqual({
+      id: 1,
+      studentUsername: "u1",
+      title: "Note1",
+      contentPath: "path1",
+      sessionId: 1,
+    });
+  });
+
+  test("not found", async function () {
+    try {
+      await Note.get(999);
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
+
 /**************** getNotesByStudent */
 
 describe("getNotesByStudent", function () {
