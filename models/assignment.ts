@@ -15,7 +15,7 @@ class Assignment {
    * Update assignment with partial data.
    *
    * @param {Partial<AssignmentDataToUpdate>} data - Partial assignment data to update
-   * @param {number} id - Assignment id to delete
+   * @param {number} id - Assignment id to update
    * @returns {AssignmentData} - Updated assignment
    * @throws {NotFoundError} - if assignment not found
    */
