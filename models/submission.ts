@@ -12,15 +12,16 @@ class Submission {
   static async create(data: SubmissionData): Promise<SubmissionData> {
   }
 
-/**
- * Adds feedback to a submission
- * @param id - The ID of the submission
- * @param feedback - The feedback to add
- * @returns Promise<SubmissionData> - The updated submission
- * @throws {NotFoundError} - if submission id not found
- */
-static async addFeedback(id: number, feedback: string): Promise<SubmissionData> {
-}
+  /**
+   * Adds feedback to a submission
+   * @param id - The ID of the submission
+   * @param feedback - The feedback to add
+   * @returns Promise<SubmissionData> - The updated submission
+   * @throws {NotFoundError} - if submission id not found
+   * TODO: what do I want this to return? Double check test.
+   */
+  static async addFeedback(id: number, feedback: string): Promise<SubmissionData> {
+  }
 
   /**
    * Retrieves submissions by student
@@ -60,3 +61,5 @@ type SubmissionData = {
   answer: string;
   feedback?: string;
 };
+
+export default Submission;
