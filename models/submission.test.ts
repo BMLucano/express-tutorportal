@@ -67,7 +67,7 @@ describe("create", function () {
 
 
 /*********** addFeedback */
-
+//TODO: should this return the feedback, entire submission, or a boolean?
 describe("addFeedback", function () {
   const feedback = "Great job!";
 
@@ -92,6 +92,87 @@ describe("addFeedback", function () {
       await Submission.addFeedback(999, feedback);
       throw new Error("fail test, you shouldn't get here");
     } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
+
+
+/*********** getSubmissionByStudent */
+
+describe("getSubmissionByStudent", function() {
+  test("works", async function() {
+    let submissions = await Submission.getSubmissionsByStudent("u1");
+    expect(submissions).toEqual([{
+      studentUsername: "u1",
+      assignmentId: 1,
+      questionId: 1,
+      answer: "not answered",
+    }]);
+  })
+
+  test("not found", async function () {
+    try{
+      await Submission.getSubmissionsByStudent("u3");
+      throw new Error("fail test, you shouldn't get here");
+    }catch(err){
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
+
+
+/********* getSubmissionsByAssignment */
+
+describe("getSubmissionByAssignment", function() {
+  test("works", async function() {
+    let submissions = await Submission.getSubmissionsByAssignment(1);
+    expect(submissions).toEqual([{
+      studentUsername: "u1",
+      assignmentId: 1,
+      questionId: 1,
+      answer: "not answered",
+    }]);
+  })
+
+  test("not found", async function () {
+    try{
+      await Submission.getSubmissionsByAssignment(999);
+      throw new Error("fail test, you shouldn't get here");
+    }catch(err){
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+});
+
+
+/********** getSubmissionsByStudentAndAssignment */
+
+describe("getSubmissionByStudentAndAssignment", function() {
+  test("works", async function() {
+    let submissions = await Submission.getSubmissionsByStudentAndAssignment("u1", 1);
+    expect(submissions).toEqual([{
+      studentUsername: "u1",
+      assignmentId: 1,
+      questionId: 1,
+      answer: "not answered",
+    }]);
+  })
+
+  test("student not found", async function () {
+    try{
+      await Submission.getSubmissionsByStudentAndAssignment("u3", 1);
+      throw new Error("fail test, you shouldn't get here");
+    }catch(err){
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
+  test("assignment not found", async function () {
+    try{
+      await Submission.getSubmissionsByStudentAndAssignment("u1", 999);
+      throw new Error("fail test, you shouldn't get here");
+    }catch(err){
       expect(err instanceof NotFoundError).toBeTruthy();
     }
   });

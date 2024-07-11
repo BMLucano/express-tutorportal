@@ -43,13 +43,13 @@ class Submission {
   }
 
   /**
-   * Retrieves a submission by student and assignment
+   * Retrieves submissions by student and assignment
    * @param studentUsername - The username of the student
    * @param assignmentId - The ID of the assignment
-   * @returns The submission for the student and assignment
+   * @returns The submissions for the student and assignment
    * @throws {NotFoundError} - if student or assignment not found
    */
-  async getSubmissionByStudentAndAssignment(studentUsername: string, assignmentId: number): Promise<SubmissionData> {
+  static async getSubmissionsByStudentAndAssignment(studentUsername: string, assignmentId: number): Promise<SubmissionData> {
   }
 }
 
