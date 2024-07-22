@@ -29,11 +29,11 @@ async function commonBeforeAll() {
     INSERT INTO users(username, password, first_name, last_name, email, role)
     VALUES ('u1', $1, 'U1F', 'U1L', 'u1@email.com', 'student'),
            ('u2', $2, 'U2F', 'U2L', 'u2@email.com', 'tutor')
-    RETURNING id`, [
+    RETURNING username`, [
     await bcrypt.hash('password1', BCRYPT_WORK_FACTOR),
     await bcrypt.hash('password2', BCRYPT_WORK_FACTOR),
   ]);
-  testUserIds.push(...resultsUsers.rows.map(({ id }) => id));
+  testUserIds.push(...resultsUsers.rows.map(({ username }) => username));
 
   // Insert data into assignments table
   const resultsAssignments = await db.query(`
@@ -47,7 +47,8 @@ async function commonBeforeAll() {
   const resultsAssignmentsStudents = await db.query(`
     INSERT INTO assignments_students(assignment_id, student_username)
     VALUES ($1, $2),
-           ($3, $4)`, [
+           ($3, $4)
+    RETURNING id`, [
     testAssignmentIds[0],
     testUserIds[0],
     testAssignmentIds[1],
@@ -59,7 +60,8 @@ async function commonBeforeAll() {
   const resultsQuestions = await db.query(`
     INSERT INTO questions(assignment_id, question_text, answer_text)
     VALUES ($1, 'Question1', 'Answer1'),
-           ($2, 'Question2', 'Answer2')`, [
+           ($2, 'Question2', 'Answer2')
+    RETURNING id`, [
     testAssignmentIds[0],
     testAssignmentIds[1],
   ]);
@@ -69,7 +71,8 @@ async function commonBeforeAll() {
   const resultsSubmissions = await db.query(`
     INSERT INTO submissions(student_username, assignment_id, question_id, answer, feedback)
     VALUES ($1, $2, $3, 'not answered', 'No feedback'),
-           ($4, $5, $6, 'not answered', 'No feedback')`, [
+           ($4, $5, $6, 'not answered', 'No feedback')
+    RETURNING id`, [
     testUserIds[0],
     testAssignmentIds[0],
     testQuestionIds[0],
@@ -83,7 +86,8 @@ async function commonBeforeAll() {
   const resultsSessions = await db.query(`
     INSERT INTO sessions(student_username, date, time, duration, notes)
     VALUES ($1, '2023-07-01', '10:00', '01:00', 'Notes1'),
-           ($2, '2023-07-02', '11:00', '02:00', 'Notes2')`, [
+           ($2, '2023-07-02', '11:00', '02:00', 'Notes2')
+    RETURNING id`, [
     testUserIds[0],
     testUserIds[1],
   ]);
@@ -93,7 +97,8 @@ async function commonBeforeAll() {
   const resultsNotes = await db.query(`
     INSERT INTO notes(student_username, title, content_path, session_id)
     VALUES ($1, 'Note1', 'path1', $2),
-           ($3, 'Note2', 'path2', $4)`, [
+           ($3, 'Note2', 'path2', $4)
+    RETURNING id`, [
     testUserIds[0],
     testSessionIds[0],
     testUserIds[1],
@@ -105,7 +110,8 @@ async function commonBeforeAll() {
   const resultsResources = await db.query(`
     INSERT INTO resources(student_username, title, url, description)
     VALUES ($1, 'Resource1', 'url1', 'Desc1'),
-           ($2, 'Resource2', 'url2', 'Desc2')`, [
+           ($2, 'Resource2', 'url2', 'Desc2')
+    RETURNING id`, [
     testUserIds[0],
     testUserIds[1],
   ]);
@@ -116,7 +122,8 @@ async function commonBeforeAll() {
   const resultsMessages = await db.query(`
     INSERT INTO messages(sender_username, receiver_username, content)
     VALUES ($1, $2, 'Message1'),
-           ($3, $4, 'Message2')`, [
+           ($3, $4, 'Message2')
+    RETURNING id`, [
     testUserIds[0],
     testUserIds[1],
     testUserIds[1],
