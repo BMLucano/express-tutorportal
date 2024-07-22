@@ -49,6 +49,17 @@ CREATE TABLE submissions (
     CONSTRAINT uq_submission UNIQUE (student_username, assignment_id, question_id)
 );
 
+CREATE TABLE sessions (
+    id SERIAL PRIMARY KEY,
+    student_username VARCHAR(25) NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    duration INTERVAL NOT NULL,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE notes (
     id SERIAL PRIMARY KEY,
     student_username VARCHAR(25) NOT NULL
@@ -69,16 +80,6 @@ CREATE TABLE resources (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE sessions (
-    id SERIAL PRIMARY KEY,
-    student_username VARCHAR(25) NOT NULL REFERENCES users (username) ON DELETE CASCADE,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
-    duration INTERVAL NOT NULL,
-    notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
