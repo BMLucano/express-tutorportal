@@ -4,18 +4,20 @@ import { SECRET_KEY } from "../../config";
 
 /** Create token for user.
  *
- * @param {username, firstName, lastName, email, role} - user data
+ * @param {username, role} - user data
  * @returns {string} - signed JWT {username, role}
  */
 
-function createToken(user: UserData): string{
+function createToken(username: string, role: string): string{
 
 }
 
-type UserData = {
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-};
+// type UserData = {
+//   username: string;
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   role: string;
+// };
+
+export default createToken;
