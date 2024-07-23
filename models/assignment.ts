@@ -75,7 +75,18 @@ class Assignment {
    * @returns {undefined}
    * @throws {NotFoundError} - if assignment not found
    */
-  static async delete(id: number): Promise<void> {}
+  static async delete(id: number): Promise<void> {
+    const result = await db.query(`
+      DELETE
+      FROM assignments
+      WHERE id = $1
+      RETURNING id`, [id]
+    );
+    const assignment = result.rows[0];
+
+    if(!assignment)
+      throw new NotFoundError(`No assignment found with id: ${id}`)
+  }
 
  /**
    * Get a single assignment by id, including questions.
