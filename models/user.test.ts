@@ -131,9 +131,9 @@ describe("register", function () {
 
 /********** findAll */
 
-describe("findAll", function() {
+describe("getAll", function() {
   test("works", async function () {
-    const users = await User.findAll();
+    const users = await User.getAll();
     expect(users).toEqual([
       {
         username: 'u1',

@@ -104,7 +104,19 @@ class User {
    *
    * @returns {User[]} - List of all user data
    */
-  static async getAll(): Promise<UserData[]> {}
+  static async getAll(): Promise<UserData[]> {
+    const result = await db.query(`
+      SELECT username,
+             first_name AS "firstName",
+             last_name AS "lastName",
+             email,
+             role
+      FROM users
+      ORDER BY username`);
+
+      console.log("users from getAll", result.rows)
+      return result.rows;
+  }
 
 
   /**
