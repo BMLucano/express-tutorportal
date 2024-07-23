@@ -69,7 +69,39 @@ class User {
     lastName: string,
     email: string,
     role: string
-  ): Promise<UserData> {}
+  ): Promise<UserData> {
+
+    const duplicateCheck = await db.query(`
+      SELECT username
+      FROM users
+      WHERE username = $1`, [username]
+    );
+    if(duplicateCheck.rows.length > 0){
+      throw new BadRequestError(`Duplicate username: ${username}`)
+    }
+
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
+
+    const result = await db.query(`
+      INSERT INTO users
+      (username,
+      password,
+      first_name,
+      last_name,
+      email,
+      role)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING username
+                first_name AS "firstName",
+                last_name AS "lastName",
+                email,
+                role `, [
+                  username, hashedPassword, firstName, lastName, email, role
+                ]);
+    const user = result.rows[0];
+
+    return user;
+  }
 
 
   /**
