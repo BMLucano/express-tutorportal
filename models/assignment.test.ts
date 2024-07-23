@@ -5,7 +5,7 @@ import db from "../db";
 import Assignment from "./assignment";
 
 import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "node:test";
+import { afterEach, beforeEach } from "vitest";
 import {
   commonBeforeAll,
   commonBeforeEach,
@@ -138,9 +138,22 @@ describe("update", function () {
 
 describe("delete", function () {
   test("works", async function () {
-    await Assignment.delete(1);
-    const result = await db.query(`SELECT * FROM assignments WHERE id = 1`);
-    expect(result.rows).toEqual([]);
+    //Create a new assignment
+    const result = await db.query(`
+      INSERT INTO assingments (title, description, due_date)
+      VALUES ('Test Assignment', 'This is a test', '2024-07-23')
+      RETURNING id
+      `);
+    const assignmentId = result.rows[0].id;
+
+    //delete the assignment
+    await Assignment.delete(assignmentId);
+
+    const deletedResult = await db.query(`
+      SELECT * FROM assignments WHERE id = $1`,
+      [assignmentId]
+    );
+    expect(deletedResult.rows).toEqual([]);
   });
 
   test("not found", async function () {

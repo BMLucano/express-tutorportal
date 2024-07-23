@@ -1,3 +1,6 @@
+import db from "../db";
+import { NotFoundError, BadRequestError } from "../expressError";
+
 /**
  * Assignment model functions for creating, updating, deleting, and retrieving assignments.
  */
@@ -9,7 +12,9 @@ class Assignment {
    * @returns {AssignmentData} - Created assignment
    * @throws {BadRequestError} - if assignment already exists in db
    */
-  static async create(data: AssignmentDataToCreate): Promise<AssignmentData> {}
+  static async create(data: AssignmentDataToCreate): Promise<AssignmentData> {
+
+  }
 
   /**
    * Update assignment with partial data.
