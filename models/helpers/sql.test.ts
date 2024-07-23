@@ -8,7 +8,7 @@ describe("sqlForPartialUpdate", function () {
       {f1: "f1", f_2: "f2"}
     );
     expect(result).toEqual({
-      setCols: "\"f1\"=$1",
+      sqlSetCols: "\"f1\"=$1",
       values: ["v1"]
     });
   });
@@ -19,7 +19,7 @@ describe("sqlForPartialUpdate", function () {
       {f_2: "f2"}
     );
     expect(result).toEqual({
-      setCols: "\"f1\"=$1, \"f2\"=$2",
+      sqlSetCols: "\"f1\"=$1, \"f2\"=$2",
       values: ["v1", "v2"],
     });
   });
