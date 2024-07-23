@@ -13,7 +13,25 @@ class Assignment {
    * @throws {BadRequestError} - if assignment already exists in db
    */
   static async create(data: AssignmentDataToCreate): Promise<AssignmentData> {
+    const { title, description, dueDate } = data;
 
+    const dupCheck = await db.query(`
+      SELECT id
+      FROM assignments
+      WHERE title = $1`, [title]
+    );
+    if(dupCheck.rows[0])
+      throw new BadRequestError(`DUplicate assignment: ${title}`);
+
+    const result = await db.query(`
+      INSERT INTO assignments (title, description, due_date)
+      VALUES ($1, $2, $3)
+      RETURNING id, title, description, due_date`,
+    [title, description, dueDate]
+    );
+    const assignment = result.rows[0];
+
+    return assignment;
   }
 
   /**
