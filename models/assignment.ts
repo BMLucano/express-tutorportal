@@ -21,12 +21,12 @@ class Assignment {
       WHERE title = $1`, [title]
     );
     if(dupCheck.rows[0])
-      throw new BadRequestError(`DUplicate assignment: ${title}`);
+      throw new BadRequestError(`Duplicate assignment: ${title}`);
 
     const result = await db.query(`
       INSERT INTO assignments (title, description, due_date)
       VALUES ($1, $2, $3)
-      RETURNING id, title, description, due_date`,
+      RETURNING id, title, description, due_date AS "dueDate"`,
     [title, description, dueDate]
     );
     const assignment = result.rows[0];

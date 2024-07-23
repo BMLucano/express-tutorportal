@@ -85,7 +85,7 @@ describe("update", function () {
       id: 1,
       title: "Updated Assignment",
       description: "Updated Description",
-      due_date: new Date("2023-07-04"),
+      dueDate: new Date("2023-07-04"),
     }]);
   });
 
