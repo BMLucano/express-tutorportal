@@ -90,31 +90,6 @@ describe("update", function () {
     });
   });
 
-  // test("works: null fields", async function () {
-  //   const updateDataSetNulls = {
-  //     title: "Updated Assignment",
-  //     description: null,
-  //     dueDate: null,
-  //   };
-
-  //   let assignment = await Assignment.update(1, updateDataSetNulls);
-  //   expect(assignment).toEqual({
-  //     id: 1,
-  //     ...updateDataSetNulls,
-  //   });
-
-  //   const result = await db.query(
-  //         `SELECT id, title, description, due_date
-  //          FROM assignments
-  //          WHERE id = 1`);
-  //   expect(result.rows).toEqual([{
-  //     id: 1,
-  //     title: "Updated Assignment",
-  //     description: null,
-  //     due_date: null,
-  //   }]);
-  // });
-
   test("not found if no such assignment", async function () {
     try {
       await Assignment.update(999, updateData);

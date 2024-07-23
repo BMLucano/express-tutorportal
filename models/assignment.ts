@@ -62,7 +62,8 @@ class Assignment {
     );
     const assignment = result.rows[0];
     console.log("assignment", assignment)
-    if(!assignment) throw new NotFoundError(`No assignment found with id: ${id} `);
+    if(!assignment)
+      throw new NotFoundError(`No assignment found with id: ${id} `);
 
     return assignment;
   }
