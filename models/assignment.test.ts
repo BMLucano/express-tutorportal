@@ -36,7 +36,7 @@ describe("create", function () {
     });
 
     const result = await db.query(
-      `SELECT title, description, due_date
+      `SELECT title, description, due_date AS "dueDate"
        FROM assignments
        WHERE title = 'New Assignment'`
     );
@@ -44,7 +44,7 @@ describe("create", function () {
       {
         title: "New Assignment",
         description: "New Description",
-        due_date: new Date("2023-07-03"),
+        dueDate: new Date("2023-07-03"),
       },
     ]);
   });
@@ -85,7 +85,7 @@ describe("update", function () {
       id: 1,
       title: "Updated Assignment",
       description: "Updated Description",
-      dueDate: new Date("2023-07-04"),
+      due_date: new Date("2023-07-04"),
     }]);
   });
 
