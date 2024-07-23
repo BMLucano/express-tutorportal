@@ -90,7 +90,7 @@ describe("register", function () {
     let user = await User.register({
       ...newUser,
       password: "password",
-    });
+  });
     expect(user).toEqual(newUser);
     const found = await db.query("SELECT * FROM users WHERE username = 'new'");
     expect(found.rows.length).toEqual(1);
@@ -103,9 +103,10 @@ describe("register", function () {
       ...newUser,
       password: "password",
       role: "tutor",
+      username: "new2"
     });
-    expect(user).toEqual({ ...newUser, role: "tutor" });
-    const found = await db.query("SELECT * FROM users WHERE username = 'new'");
+    expect(user).toEqual({ ...newUser, role: "tutor", username: "new2" });
+    const found = await db.query("SELECT * FROM users WHERE username = 'new2'");
     expect(found.rows.length).toEqual(1);
     expect(found.rows[0].role).toEqual("tutor");
     expect(found.rows[0].password.startsWith("$2b$")).toEqual(true);

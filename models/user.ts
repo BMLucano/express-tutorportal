@@ -63,13 +63,8 @@ class User {
    * @throws BadRequestError - for duplicates
    */
   static async register(
-    username: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    role: string
-  ): Promise<UserData> {
+    { username, password, firstName, lastName, email,role}: RegisterUserData):
+    Promise<UserData> {
 
     const duplicateCheck = await db.query(`
       SELECT username
@@ -91,7 +86,7 @@ class User {
       email,
       role)
       VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING username
+      RETURNING username,
                 first_name AS "firstName",
                 last_name AS "lastName",
                 email,
@@ -156,5 +151,14 @@ type UserData = {
   email: string;
   role: string;
 };
+
+type RegisterUserData = {
+  username: string;
+  password: string,
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+}
 
 export default User;
