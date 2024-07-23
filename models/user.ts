@@ -120,14 +120,30 @@ class User {
 
   /**
    * Get user data by username.
-   *static
+   *
    * @param {string} username
    *
    * @returns {User} - User data
    *
    * @throws NotFoundError - if user not found
    */
-  static async get(username: string): Promise<UserData> {}
+  static async get(username: string): Promise<UserData> {
+
+    const result = await db.query(`
+      SELECT username,
+             first_name AS "firstName",
+             last_name AS "lastName",
+             email,
+             role
+        FROM users
+        WHERE username = $1`, [username],
+      );
+    const user = result.rows[0];
+
+    if(!user) throw new NotFoundError(`User not found: ${username} `);
+
+    return user;
+  }
 
   //TODO: figure out what to do with this function
   /** Given a username, get dashboard data by calling assignment,
