@@ -114,7 +114,6 @@ class User {
       FROM users
       ORDER BY username`);
 
-      console.log("users from getAll", result.rows)
       return result.rows;
   }
 

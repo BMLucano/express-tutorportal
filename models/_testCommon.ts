@@ -130,6 +130,7 @@ async function commonBeforeAll() {
     testUserIds[0],
   ]);
   testMessageIds.push(...resultsMessages.rows.map(({ id }) => id));
+
 }
 
 async function commonBeforeEach() {

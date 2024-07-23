@@ -8,7 +8,7 @@ import {
 import db from "../db";
 import User from "./user";
 import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "node:test";
+import { afterEach, beforeEach } from "vitest";
 
 import {
   commonBeforeAll,
