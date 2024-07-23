@@ -1,5 +1,6 @@
 import db from "../db";
 import { NotFoundError, BadRequestError } from "../expressError";
+import { sqlForPartialUpdate } from "./helpers/sql";
 
 /**
  * Assignment model functions for creating, updating, deleting, and retrieving assignments.
@@ -26,10 +27,11 @@ class Assignment {
     const result = await db.query(`
       INSERT INTO assignments (title, description, due_date)
       VALUES ($1, $2, $3)
-      RETURNING id, title, description, due_date AS "dueDate"`,
+      RETURNING id, title, description, TO_CHAR(due_date, 'YYYY-MM-DD') AS "dueDate"`,
     [title, description, dueDate]
     );
     const assignment = result.rows[0];
+    console.log("assignment date", assignment.dueDate)
 
     return assignment;
   }
@@ -42,7 +44,28 @@ class Assignment {
    * @returns {AssignmentData} - Updated assignment
    * @throws {NotFoundError} - if assignment not found
    */
-  static async update(id: number, data: Partial<AssignmentDataToUpdate>): Promise<AssignmentData> {}
+  static async update(id: number, data: Partial<AssignmentDataToUpdate>):
+  Promise<AssignmentData> {
+
+    const { sqlSetCols, values } = sqlForPartialUpdate(
+      data,
+      {dueDate: "due_date"},
+    );
+    const idSanitationIdx = "$" + (values.length + 1);
+
+    const result = await db.query(`
+      UPDATE assignments
+      SET ${sqlSetCols}
+      WHERE id = ${idSanitationIdx}
+      RETURNING id, title, description, TO_CHAR(due_date, 'YYYY-MM-DD') AS "dueDate"`,
+    [...values, id]
+    );
+    const assignment = result.rows[0];
+    console.log("assignment", assignment)
+    if(!assignment) throw new NotFoundError(`No assignment found with id: ${id} `);
+
+    return assignment;
+  }
 
   /**
    * Delete an assignment from database by id.
@@ -75,27 +98,27 @@ class Assignment {
 type AssignmentDataToCreate = {
   title: string;
   description: string;
-  dueDate: Date;
+  dueDate: string;
 };
 
 type AssignmentDataToUpdate = {
   title?: string | null;
   description?: string | null;
-  dueDate?: Date | null;
+  dueDate?: string | null;
 };
 
 type AssignmentData = {
   id: number;
   title: string;
   description: string;
-  dueDate: Date;
+  dueDate: string;
 };
 
 type AssignmentDataWithQuestions = {
   id: number;
   title: string;
   description: string;
-  dueDate: Date;
+  dueDate: string;
   questions: QuestionData[];
 };
 
