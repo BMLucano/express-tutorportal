@@ -2,8 +2,6 @@ import { describe, test, it, expect } from "vitest";
 import { NotFoundError, BadRequestError } from "../expressError";
 
 import db from "../db";
-import User from "./user";
-import Assignment from "./assignment";
 import AssignmentStudent from "./assignmentStudent";
 
 import { afterAll, beforeAll } from "vitest";
@@ -13,6 +11,7 @@ import {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testAssignmentIds
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -24,28 +23,32 @@ afterAll(commonAfterAll);
 
 describe("assign", function () {
   test("works", async function () {
-    let assignmentStudent = await AssignmentStudent.assign("u1", 1);
+    let assignmentStudent = await AssignmentStudent.assign("u1", testAssignmentIds[0]);
     expect(assignmentStudent).toEqual({
       id: expect.any(Number),
-      assignmentId: 1,
+      assignmentId: testAssignmentIds[0],
       studentUsername: "u1",
       status: "assigned",
     });
 
-    const result = await db.query(`SELECT * FROM assignments_students WHERE assignment_id = 1 AND student_username = 'u1'`);
-    expect(result.rows).toEqual([
+    const result = await db.query(`SELECT *
+                                   FROM assignments_students
+                                   WHERE assignment_id = $1
+                                   AND student_username = 'u1'`,
+                                  [testAssignmentIds[0]]);
+    expect(result.rows[0]).toEqual(
       {
         id: expect.any(Number),
-        assignment_id: 1,
+        assignment_id: testAssignmentIds[0],
         student_username: 'u1',
         status: 'assigned'
       }
-    ]);
+    );
   });
 
   test("not found if student not found", async function () {
     try {
-      await AssignmentStudent.assign("unknown", 1);
+      await AssignmentStudent.assign("unknown", testAssignmentIds[0]);
       throw new Error("fail test, you shouldn't get here");
     } catch (err) {
       expect(err instanceof NotFoundError).toBeTruthy();
