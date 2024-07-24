@@ -92,7 +92,9 @@ class AssignmentStudent {
     const result = await db.query(`
       SELECT assignment_id AS "assignmentId"
       FROM assignments_students
-      WHERE student_username = $1`,
+      JOIN assignments ON assignments_students.assignment_id = assignments.id
+      WHERE assignments_students.student_username = $1
+      ORDER BY assignments.due_date DESC`,
       [studentUsername]
     )
     const assignments = result.rows;
@@ -121,7 +123,29 @@ class AssignmentStudent {
     static async getAssignmentsByStatus(
       status: string,
       studentUsername: string
-    ): Promise<AssignmentData[]> {}
+    ): Promise<AssignmentData[]> {
+
+      if(!(await studentExists(studentUsername)))
+      throw new NotFoundError(`Student ${studentUsername} not found`);
+
+      //order results by due_date
+      const results = await db.query(`
+        SELECT assignment_id AS "assignmentId"
+        FROM assignments_students
+        JOIN assignments ON assignments_students.assignment_id = assignments.id
+        WHERE assignments_students.student_username = $1 AND status = $2
+        ORDER BY assignments.due_date DESC`,
+      [studentUsername, status]);
+      const assignments = results.rows;
+
+      const assignmentPromises = assignments.map(async (a) =>{
+        return await Assignment.get(a.assignmentId);
+      });
+
+      const assignmentData = await Promise.all(assignmentPromises);
+
+      return assignmentData;
+    }
 
   /**
    * Get all Students that an assignment is assigned to, based on assignment id.

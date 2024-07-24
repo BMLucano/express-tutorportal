@@ -138,13 +138,13 @@ describe("getAssignmentsByStudent", function () {
 
 describe("getAssignmentsByStatus", function () {
   test("works", async function () {
-    let assignments = await AssignmentStudent.getAssignmentsByStatus("assigned", "student1");
+    let assignments = await AssignmentStudent.getAssignmentsByStatus("assigned", "u1");
     expect(assignments).toEqual([
       {
-        id: 1,
+        id: testAssignmentIds[0],
         title: "Assignment1",
         description: "Desc1",
-        dueDate: new Date("2023-07-01"),
+        dueDate: "2023-07-01",
         questions: expect.any(Array),
       },
     ]);
