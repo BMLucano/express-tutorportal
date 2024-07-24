@@ -5,7 +5,7 @@ import db from "../db";
 import AssignmentStudent from "./assignmentStudent";
 
 import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "node:test";
+import { afterEach, beforeEach } from "vitest";
 import {
   commonBeforeAll,
   commonBeforeEach,
@@ -70,23 +70,32 @@ describe("assign", function () {
 
 describe("updateStatus", function () {
   test("works", async function () {
-    let assignmentStudent = await AssignmentStudent.updateStatus("u1", 1, "in progress");
+    let assignmentStudent = await AssignmentStudent.updateStatus(
+      "u1", testAssignmentIds[0], "in progress");
     expect(assignmentStudent).toEqual({
       id: expect.any(Number),
-      assignmentId: 1,
+      assignmentId: testAssignmentIds[0],
       studentUsername: "u1",
       status: "in progress",
     });
 
-    const result = await db.query(`SELECT * FROM assignments_students WHERE assignment_id = 1 AND student_username = 'u1'`);
-    expect(result.rows).toEqual([
+    const result = await db.query(`
+      SELECT id,
+             assignment_id AS "assignmentId",
+             student_username AS "studentUsername",
+             status
+      FROM assignments_students
+      WHERE assignment_id = $1 AND student_username = 'u1'`,
+    [testAssignmentIds[0]]
+    );
+    expect(result.rows[0]).toEqual(
       {
         id: expect.any(Number),
-        assignment_id: 1,
-        student_username: 'u1',
+        assignmentId: testAssignmentIds[0],
+        studentUsername: 'u1',
         status: 'in progress'
       }
-    ]);
+    );
   });
 
   test("not found if student not found", async function () {

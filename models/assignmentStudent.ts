@@ -1,5 +1,6 @@
 import db from "../db";
 import { NotFoundError, BadRequestError } from "../expressError";
+import { studentExists, assignmentExists } from "./helpers/dbHelpers";
 
 /**
  * Student assignment model for handling the assignment to student relationship.
@@ -58,7 +59,33 @@ class AssignmentStudent {
    * @param {string} status
    * @returns {AssignmentStudent} - The updated assignment-student relationship
    */
-  static async updateStatus(studentUsername: string, assignmentId: number, status: string): Promise<AssignmentStudentData> {}
+  static async updateStatus(
+    studentUsername: string, assignmentId: number, status: string):
+    Promise<AssignmentStudentData> {
+
+      if(!(await studentExists(studentUsername))){
+        throw new NotFoundError(`Student ${studentUsername} not found`)
+      }
+
+      if(!(await assignmentExists(assignmentId))){
+        throw new NotFoundError(`Assignment ${assignmentId} not found`)
+      }
+
+      const result = await db.query(`
+        UPDATE assignments_students
+        SET status = $1
+        WHERE student_username = $2 AND assignment_id = $3
+        RETURNING id,
+                  student_username AS "studentUsername",
+                  assignment_id AS "assignmentId",
+                  status`,
+      [status, studentUsername, assignmentId],
+      );
+      const assignmentStudent = result.rows[0];
+
+      return assignmentStudent;
+
+    }
 
   /**
    * Get all assignments based on student username.
