@@ -87,9 +87,15 @@ class AssignmentStudent {
    * @param {string} studentUsername
    * @returns {AssignmentData[]} - Retrieved assignments
    * @throws {NotFoundError} - if student not found
+   *  TODO://possibly need error for no assignments found
    */
   static async getAssignmentsByStudent(studentUsername: string):
   Promise<AssignmentData[]> {
+
+    if(!(await studentExists(studentUsername))){
+      throw new NotFoundError(`Student ${studentUsername} not found`)
+    }
+
     //order results by due date
     const result = await db.query(`
       SELECT assignment_id AS "assignmentId"
@@ -101,8 +107,8 @@ class AssignmentStudent {
     )
     const assignments = result.rows;
 
-    if(assignments.length === 0)
-      throw new NotFoundError(`No assignments found for student: ${studentUsername}`);
+    // if(assignments.length === 0)
+    //   throw new NotFoundError(`No assignments found for student: ${studentUsername}`);
 
     //using Promises to handle async fetching of assignment data
     const assignmentPromises = assignments.map(async (a) => {
@@ -143,7 +149,6 @@ class AssignmentStudent {
       const assignmentPromises = assignments.map(async (a) =>{
         return await Assignment.get(a.assignmentId);
       });
-
       const assignmentData = await Promise.all(assignmentPromises);
 
       return assignmentData;
