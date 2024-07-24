@@ -1,6 +1,7 @@
 import db from "../db";
 import { NotFoundError, BadRequestError } from "../expressError";
 import { studentExists, assignmentExists } from "./helpers/dbHelpers";
+import Assignment from "./assignment";
 
 /**
  * Student assignment model for handling the assignment to student relationship.
@@ -17,21 +18,13 @@ class AssignmentStudent {
    */
   static async assign(studentUsername: string, assignmentId: number):
   Promise<AssignmentStudentData> {
-    //check oif student exists
-    const sResult = await db.query(`
-      SELECT username FROM users WHERE username = $1`,
-      [studentUsername],
-    );
-    if(!sResult.rows[0])
-      throw new NotFoundError(`Student ${studentUsername} not found`);
+    if(!(await studentExists(studentUsername))){
+      throw new NotFoundError(`Student ${studentUsername} not found`)
+    }
 
-    //check if assignment exists
-    const aResult = await db.query(`
-      SELECT id FROM assignments WHERE id = $1`,
-      [assignmentId],
-    );
-    if(!aResult.rows[0])
-      throw new NotFoundError(`Assignement ${assignmentId} not found`);
+    if(!(await assignmentExists(assignmentId))){
+      throw new NotFoundError(`Assignment ${assignmentId} not found`)
+    }
 
     const result = await db.query(`
       INSERT INTO assignments_students (assignment_id, student_username)
@@ -94,7 +87,27 @@ class AssignmentStudent {
    * @returns {AssignmentData[]} - Retrieved assignments
    * @throws {NotFoundError} - if student not found
    */
-  static async getAssignmentsByStudent(studentUsername: string): Promise<AssignmentData[]> {}
+  static async getAssignmentsByStudent(studentUsername: string):
+  Promise<AssignmentData[]> {
+    const result = await db.query(`
+      SELECT assignment_id AS "assignmentId"
+      FROM assignments_students
+      WHERE student_username = $1`,
+      [studentUsername]
+    )
+    const assignments = result.rows;
+
+    if(assignments.length === 0)
+      throw new NotFoundError(`No assignments found for student: ${studentUsername}`);
+
+    //using Promises to handle async fetching of assignment data
+    const assignmentPromises = assignments.map(async (a) => {
+      return await Assignment.get(a.assignmentId);
+    })
+    const assignmentData = await Promise.all(assignmentPromises);
+
+    return assignmentData;
+  }
 
     /**
    * Get assignments by status and student.

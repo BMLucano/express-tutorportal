@@ -115,10 +115,10 @@ describe("getAssignmentsByStudent", function () {
     let assignments = await AssignmentStudent.getAssignmentsByStudent("u1");
     expect(assignments).toEqual([
       {
-        id: 1,
+        id: testAssignmentIds[0],
         title: "Assignment1",
         description: "Desc1",
-        dueDate: new Date("2023-07-01"),
+        dueDate: "2023-07-01",
         questions: expect.any(Array),
       },
     ]);
