@@ -96,23 +96,23 @@ class Assignment {
    * @throws {NotFoundError} - if assignment not found
    */
   static async get(id: number): Promise<AssignmentDataWithQuestions> {
-    const result = await db.query(`
+    const aResult = await db.query(`
       SELECT id, title, description, TO_CHAR(due_date, 'YYYY-MM-DD') AS "dueDate"
       FROM assignments
       WHERE id = $1`, [id]);
-    const assignment = result.rows[0];
+    const assignment = aResult.rows[0];
 
     if(!assignment)
       throw new NotFoundError(`No assignment found with id: ${id}`);
 
-    const questionsResult = await db.query(`
+    const qResults = await db.query(`
       SELECT id,
             assignment_id AS "assignmentId",
             question_text AS "questionText",
             answer_text AS "answerText"
       FROM questions
       WHERE assignment_id = $1`, [assignment.id]);
-      const questions = questionsResult.rows;
+      const questions = qResults.rows;
 
       assignment.questions = questions;
       return assignment;
@@ -123,8 +123,29 @@ class Assignment {
    *
    * @returns {AssignmentDataWithQuestions[]} - Retrieved assignments with questions
    */
-  static async getAll(): Promise<AssignmentDataWithQuestions[]> {}
+  static async getAll(): Promise<AssignmentDataWithQuestions[]> {
+    const aResults = await db.query(`
+      SELECT id, title, description, TO_CHAR(due_date, 'YYYY-MM-DD') AS "dueDate"
+      FROM assignments`);
+    const assignments = aResults.rows;
 
+    const qResults = await db.query(`
+      SELECT id,
+             assignment_id AS "assignmentId",
+             question_text AS "questionText",
+             answer_text AS "answerText"
+      FROM questions`)
+    const questions = qResults.rows;
+
+    //assign questions to each assignment where id's match
+    assignments.forEach(assignment =>
+      assignment.questions = questions.filter(question =>
+        assignment.id === question.assignmentId)
+    );
+
+    return assignments;
+
+  }
 
 }
 

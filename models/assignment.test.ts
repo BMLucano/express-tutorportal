@@ -175,17 +175,17 @@ describe("getAll", function () {
     let assignments = await Assignment.getAll();
     expect(assignments).toEqual([
       {
-        id: 1,
+        id: testAssignmentIds[0],
         title: "Assignment1",
         description: "Desc1",
-        dueDate: new Date("2023-07-01"),
+        dueDate: "2023-07-01",
         questions: expect.any(Array),
       },
       {
-        id: 2,
+        id: testAssignmentIds[1],
         title: "Assignment2",
         description: "Desc2",
-        dueDate: new Date("2023-07-02"),
+        dueDate: "2023-07-02",
         questions: expect.any(Array),
       },
     ]);
