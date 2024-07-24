@@ -54,6 +54,15 @@ describe("assign", function () {
       expect(err instanceof NotFoundError).toBeTruthy();
     }
   });
+
+  test("not found if assignment not found", async function () {
+    try {
+      await AssignmentStudent.assign("u1", 0);
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
 });
 
 

@@ -42,10 +42,9 @@ class AssignmentStudent {
               [assignmentId, studentUsername]
     );
     const assignmentStudent = result.rows[0];
-    console.log("assignmentstudent", Boolean(assignmentStudent))
 
     if(!assignmentStudent)
-      throw new NotFoundError("Failed to create assignment-student realtionship");
+      throw new BadRequestError("Failed to create assignment-student realtionship");
 
     return assignmentStudent;
   }
