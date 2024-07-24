@@ -31,7 +31,6 @@ class Assignment {
     [title, description, dueDate]
     );
     const assignment = result.rows[0];
-    console.log("assignment date", assignment.dueDate)
 
     return assignment;
   }
@@ -137,13 +136,23 @@ class Assignment {
       FROM questions`)
     const questions = qResults.rows;
 
-    //assign questions to each assignment where id's match
-    assignments.forEach(assignment =>
-      assignment.questions = questions.filter(question =>
-        assignment.id === question.assignmentId)
+    // store assignments and their questions
+    const assignmentMap = new Map(assignments.map(a =>
+      [a.id, { ...a, questions: [] }]
+      )
     );
+    console.log("assignmentMap", assignmentMap)
 
-    return assignments;
+    // Assign questions to each assignment using the Map
+    questions.forEach(q => {
+      const assignment = assignmentMap.get(q.assignmentId);
+      if (assignment) {
+        assignment.questions.push(q);
+      }
+    });
+
+    // Return the assignments with questions as an array
+    return Array.from(assignmentMap.values());
 
   }
 
