@@ -2,6 +2,7 @@ import db from "../db";
 import { NotFoundError, BadRequestError } from "../expressError";
 import { studentExists, assignmentExists } from "./helpers/dbHelpers";
 import Assignment from "./assignment";
+import User from "./user";
 
 /**
  * Student assignment model for handling the assignment to student relationship.
@@ -89,6 +90,7 @@ class AssignmentStudent {
    */
   static async getAssignmentsByStudent(studentUsername: string):
   Promise<AssignmentData[]> {
+    //order results by due date
     const result = await db.query(`
       SELECT assignment_id AS "assignmentId"
       FROM assignments_students
@@ -154,7 +156,28 @@ class AssignmentStudent {
    * @returns {User[]} - List of student User objects
    * @throws {NotFoundError} - if assignment id not found
    */
-  static async getStudentsByAssignment(assignmentId: number): Promise<User[]> {}
+  static async getStudentsByAssignment(assignmentId: number): Promise<User[]> {
+
+    if(!(await assignmentExists(assignmentId))){
+      throw new NotFoundError(`Assignment ${assignmentId} not found`)
+    }
+
+    const result = await db.query(`
+      SELECT student_username AS "studentUsername"
+      FROM assignments_students
+      JOIN users ON users.username = assignments_students.student_username
+      WHERE assignments_students.assignment_id = $1
+      ORDER BY users.first_name`,
+    [assignmentId]);
+    const students = result.rows;
+
+    const studentPromises = students.map(async (s) => {
+      return await User.get(s.studentUsername);
+    });
+    const studentData = await Promise.all(studentPromises);
+
+    return studentData;
+  }
 }
 
 type AssignmentData = {

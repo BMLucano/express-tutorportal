@@ -165,7 +165,7 @@ describe("getAssignmentsByStatus", function () {
 
 describe("getStudentsByAssignment", function () {
   test("works", async function () {
-    let students = await AssignmentStudent.getStudentsByAssignment(1);
+    let students = await AssignmentStudent.getStudentsByAssignment(testAssignmentIds[0]);
     expect(students).toEqual([
       {
         username: "u1",
