@@ -95,7 +95,28 @@ class Assignment {
    * @returns {AssignmentDataWithQuestions} - Retrieved assignment with questions
    * @throws {NotFoundError} - if assignment not found
    */
-  static async get(id: number): Promise<AssignmentDataWithQuestions> {}
+  static async get(id: number): Promise<AssignmentDataWithQuestions> {
+    const result = await db.query(`
+      SELECT id, title, description, TO_CHAR(due_date, 'YYYY-MM-DD') AS "dueDate"
+      FROM assignments
+      WHERE id = $1`, [id]);
+    const assignment = result.rows[0];
+
+    if(!assignment)
+      throw new NotFoundError(`No assignment found with id: ${id}`);
+
+    const questionsResult = await db.query(`
+      SELECT id,
+            assignment_id AS "assignmentId",
+            question_text AS "questionText",
+            answer_text AS "answerText"
+      FROM questions
+      WHERE assignment_id = $1`, [assignment.id]);
+      const questions = questionsResult.rows;
+
+      assignment.questions = questions;
+      return assignment;
+  }
 
   /**
    * Get all assignments, including questions.

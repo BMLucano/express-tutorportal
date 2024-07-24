@@ -147,12 +147,12 @@ describe("delete", function () {
 
 describe("get", function () {
   test("works", async function () {
-    let assignment = await Assignment.get(1);
+    let assignment = await Assignment.get(testAssignmentIds[0]);
     expect(assignment).toEqual({
-      id: 1,
+      id: testAssignmentIds[0],
       title: "Assignment1",
       description: "Desc1",
-      dueDate: new Date("2023-07-01"),
+      dueDate: "2023-07-01",
       questions: expect.any(Array),
     });
   });
