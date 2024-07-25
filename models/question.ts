@@ -1,6 +1,7 @@
 import db from "../db";
 import { BadRequestError, NotFoundError } from "../expressError";
 import { sqlForPartialUpdate } from "./helpers/sql";
+import { assignmentExists } from "./helpers/dbHelpers";
 /**
  * Question model for creating, updating, deleting, and retrieving questions.
  */
@@ -91,9 +92,20 @@ class Question {
    *
    * @throws {NotFoundError} - if question not found
    */
-  static async delete(id: number): Promise<void> {}
+  static async delete(id: number): Promise<void> {
+
+    const result = await db.query(`
+      DELETE FROM questions WHERE id = $1 RETURNING id`,
+    [id]
+    );
+    const question = result.rows[0];
+
+    if(!question)
+      throw new NotFoundError(`No question found with id: ${id}`);
+  }
 
   /**
+   * TODO: do I need this? Already getting all questions when getting Assignment
    * Get all Questions by assignment id.
    *
    * @param {number} assignmentId
@@ -105,6 +117,22 @@ class Question {
   static async getAllByAssignmentId(assignmentId: number):
     Promise<QuestionData[]> {
 
+      if(!(await assignmentExists(assignmentId))){
+        throw new NotFoundError(`No assignment found with id: ${assignmentId}`);
+      }
+
+      const result = await db.query(`
+        SELECT id,
+               assignment_id AS "assignmentId",
+               question_text AS "questionText",
+               answer_text AS "answerText"
+        FROM questions
+        WHERE assignment_id = $1`,
+      [assignmentId]
+      );
+      const questions = result.rows;
+
+      return questions;
     }
 }
 

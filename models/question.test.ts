@@ -156,11 +156,6 @@ describe("getAllByAssignmentId", function () {
     ]);
   });
 
-  test("not found if no questions for assignment", async function () {
-    let questions = await Question.getAllByAssignmentId(999);
-    expect(questions).toEqual([]);
-  });
-
   test("not found if no assignment", async function () {
     try {
       await Question.getAllByAssignmentId(999);
