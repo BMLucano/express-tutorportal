@@ -15,9 +15,8 @@ class Question {
    * @throws {BadRequestError} - if question already exists in db
    */
   static async create(data: QuestionDataToCreate): Promise<QuestionData> {
-    console.log("data", data)
+
     const {assignmentId, questionText, answerText } = data;
-    console.log("assingment, question, answer", assignmentId, questionText, answerText)
 
     const dupeCheck = await db.query(`
       SELECT id
@@ -40,7 +39,6 @@ class Question {
     const question = result.rows[0];
 
     return question;
-
   }
 
   /**

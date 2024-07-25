@@ -49,15 +49,21 @@ describe("create", function(){
     });
   });
 
-  // test("bad request with dupe", async function(){
-  //   try{
-  //     await Question.create(newQuestion);
-  //     await Question.create(newQuestion);
-  //     throw new Error("fail test, you shouldn't get here")
-  //   }catch(err){
-  //     expect(err instanceof BadRequestError).toBeTruthy();
-  //   }
-  // });
+  test("bad request with dupe", async function(){
+    const newQuestion = {
+      assignmentId: testAssignmentIds[0],
+      questionText: "New Question",
+      answerText: "New Answer",
+    };
+
+    try{
+      await Question.create(newQuestion);
+      await Question.create(newQuestion);
+      throw new Error("fail test, you shouldn't get here")
+    }catch(err){
+      expect(err instanceof BadRequestError).toBeTruthy();
+    }
+  });
 
 })
 /**************** update */
