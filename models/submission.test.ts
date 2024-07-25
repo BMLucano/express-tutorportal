@@ -14,6 +14,8 @@ import {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testAssignmentIds,
+  testQuestionIds,
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -25,14 +27,15 @@ afterAll(commonAfterAll);
 /************ create */
 
 describe("create", function () {
-  const newSubmission = {
-    studentUsername: "u1",
-    assignmentId: 1,
-    questionId: 1,
-    answer: "Answer",
-  };
 
   test("works", async function () {
+    const newSubmission = {
+      studentUsername: "u1",
+      assignmentId: testAssignmentIds[0],
+      questionId: testQuestionIds[0],
+      answer: "Answer",
+    };
+
     let submission = await Submission.create(newSubmission);
     expect(submission).toEqual({
       ...newSubmission,
@@ -40,28 +43,33 @@ describe("create", function () {
     });
 
     const result = await db.query(
-      `SELECT student_username, assignment_id, question_id, answer
+      `SELECT id, student_username, assignment_id, question_id, answer
        FROM submissions
-       WHERE student_username = 'u1' AND assignment_id = 1 AND question_id = 1`
+       WHERE student_username = 'u1' AND assignment_id = $1 AND question_id = $2 AND answer = 'Answer'`,
+      [testAssignmentIds[0], testQuestionIds[0]],
     );
-    expect(result.rows).toEqual([
+    expect(result.rows[0]).toEqual(
       {
+        id: expect.any(Number),
         student_username: "u1",
-        assignment_id: 1,
-        question_id: 1,
+        assignment_id: testAssignmentIds[0],
+        question_id: testQuestionIds[0],
         answer: "Answer",
       },
-    ]);
+    );
   });
 
-  test("bad request with dupe", async function () {
-    try {
-      await Submission.create(newSubmission);
-      await Submission.create(newSubmission);
-      throw new Error("fail test, you shouldn't get here");
-    } catch (err) {
-      expect(err instanceof BadRequestError).toBeTruthy();
-    }
+  test("null return with dupe", async function () {
+    const newSubmission = {
+      studentUsername: "u1",
+      assignmentId: testAssignmentIds[0],
+      questionId: testQuestionIds[0],
+      answer: "Answer",
+    };
+
+    await Submission.create(newSubmission);
+    const dupeSubmission = await Submission.create(newSubmission);
+    expect(dupeSubmission).toEqual(null);
   });
 });
 

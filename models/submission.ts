@@ -1,4 +1,5 @@
-
+import { aN } from "vitest/dist/reporters-yx5ZTtEV";
+import db from "../db";
 /**
  * Submission model for creating, updating, and retrieving submissions.
  */
@@ -6,10 +7,37 @@
 class Submission {
   /**
    * Creates a new submission and updates db
-   * @param {SubmissionData }data - The submission data
+   * @param {SubmissionDataToCreate }data - The submission data
    * @returns The created Submission
    */
-  static async create(data: SubmissionData): Promise<SubmissionData> {
+  static async create(data: SubmissionDataToCreate):
+    Promise<SubmissionData | null>{
+    const{ studentUsername, assignmentId, questionId, answer } = data;
+
+    const existingSubmission = await db.query(`
+      SELECT id
+      FROM submissions
+      WHERE student_username = $1 AND assignment_id = $2 AND question_id = $3 AND answer = $4`,
+     [studentUsername, assignmentId, questionId, answer]
+    );
+    if(existingSubmission.rows[0]){
+      return null; //handle client-side
+    }
+
+    const result = await db.query(`
+      INSERT INTO submissions
+        (student_username, assignment_id, question_id, answer)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id,
+                student_username AS "studentUsername",
+                assignment_id AS "assignmentId",
+                question_id AS "questionId",
+                answer`,
+              [studentUsername, assignmentId, questionId, answer]
+    );
+    const submission = result.rows[0];
+
+    return submission;
   }
 
   /**
@@ -52,6 +80,13 @@ class Submission {
   static async getSubmissionsByStudentAndAssignment(studentUsername: string, assignmentId: number): Promise<SubmissionData> {
   }
 }
+type SubmissionDataToCreate = {
+  studentUsername: string;
+  assignmentId: number;
+  questionId: number;
+  answer: string;
+  feedback?: string;
+};
 
 type SubmissionData = {
   id?: number;
