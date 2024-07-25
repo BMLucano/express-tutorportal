@@ -25,10 +25,9 @@ async function commonBeforeAll() {
     await db.query('DELETE FROM assignments');
     await db.query('DELETE FROM users');
 
-    console.log('testAssignmentIds from commonBeforeAll', testAssignmentIds)
+    // console.log('testAssignmentIds from commonBeforeAll', testAssignmentIds)
   }catch(err){
-    console.error("Error in commonBeforeAll", err);
-    throw err;
+    console.error("Error in commonBeforeAll", err)
   }
 
   // Insert data into users table
@@ -41,6 +40,7 @@ async function commonBeforeAll() {
     await bcrypt.hash('password2', BCRYPT_WORK_FACTOR),
   ]);
   testUserIds.push(...resultsUsers.rows.map(({ username }) => username));
+  console.log("testUserIds", testUserIds);
 
   // Insert data into assignments table
   const resultsAssignments = await db.query(`
@@ -49,6 +49,7 @@ async function commonBeforeAll() {
            ('Assignment2', 'Desc2', '2023-07-02')
     RETURNING id`);
   testAssignmentIds.push(...resultsAssignments.rows.map(({ id }) => id));
+  console.log("testAssignmentIds", testAssignmentIds);
 
   // Insert data into assignments_students table
   const resultsAssignmentsStudents = await db.query(`
@@ -62,6 +63,7 @@ async function commonBeforeAll() {
     testUserIds[1],
   ]);
   testAssignmentsStudentsIds.push(...resultsAssignmentsStudents.rows.map(({ id }) => id));
+  console.log("testAssignmentsStudentsIds", testAssignmentsStudentsIds);
 
   // Insert data into questions table
   const resultsQuestions = await db.query(`
@@ -73,6 +75,7 @@ async function commonBeforeAll() {
     testAssignmentIds[1],
   ]);
   testQuestionIds.push(...resultsQuestions.rows.map(({ id }) => id));
+  console.log("testQuestionIds", testQuestionIds);
 
   // Insert data into submissions table
   const resultsSubmissions = await db.query(`
@@ -88,6 +91,7 @@ async function commonBeforeAll() {
     testQuestionIds[1],
   ]);
   testSubmissionIds.push(...resultsSubmissions.rows.map(({ id }) => id));
+  console.log("testSubmissionIds", testSubmissionIds);
 
   // Insert data into sessions table
   const resultsSessions = await db.query(`
@@ -99,6 +103,7 @@ async function commonBeforeAll() {
     testUserIds[1],
   ]);
   testSessionIds.push(...resultsSessions.rows.map(({ id }) => id));
+  console.log("testSessionIds", testSessionIds);
 
   // Insert data into notes table
   const resultsNotes = await db.query(`
@@ -112,6 +117,7 @@ async function commonBeforeAll() {
     testSessionIds[1]
   ]);
   testNoteIds.push(...resultsNotes.rows.map(({ id }) => id));
+  console.log("testNoteIds", testNoteIds);
 
   // Insert data into resources table
   const resultsResources = await db.query(`
@@ -123,6 +129,7 @@ async function commonBeforeAll() {
     testUserIds[1],
   ]);
   testResourceIds.push(...resultsResources.rows.map(({ id }) => id));
+  console.log("testResourceIds", testResourceIds);
 
 
   // Insert data into messages table
@@ -137,6 +144,7 @@ async function commonBeforeAll() {
     testUserIds[0],
   ]);
   testMessageIds.push(...resultsMessages.rows.map(({ id }) => id));
+  console.log("testMessageIds", testMessageIds);
 
 }
 

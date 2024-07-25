@@ -24,14 +24,14 @@ afterAll(commonAfterAll);
 
 /**************** create */
 describe("create", function(){
-  const newQuestion = {
-    assignmentId: testAssignmentIds[0],
-    questionText: "New Question",
-    answerText: "New Answer",
-  };
 
   test("works", async function(){
-    console.log("testAssignmentIds in test", testAssignmentIds);
+    const newQuestion = {
+      assignmentId: testAssignmentIds[0],
+      questionText: "New Question",
+      answerText: "New Answer",
+    };
+
     const question = await Question.create(newQuestion);
     expect(question).toEqual({
       ...newQuestion,
@@ -41,7 +41,7 @@ describe("create", function(){
     const result = await db.query(`
       SELECT assignment_id, question_text, answer_text
       FROM questions
-      WHERE question_text = 'New Question `)
+      WHERE question_text = 'New Question' `)
     expect(result.rows[0]).toEqual({
       assignment_id: testAssignmentIds[0],
       question_text: "New Question",
