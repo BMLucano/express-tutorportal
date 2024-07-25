@@ -81,7 +81,7 @@ describe("update", function(){
     });
 
     const result = await db.query(`
-      SELECT assignment_id, question_text, answer_text
+      SELECT id, assignment_id, question_text, answer_text
       FROM questions
       WHERE id = $1`, [testQuestionIds[0]]);
     expect(result.rows[0]).toEqual({

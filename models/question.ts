@@ -1,5 +1,6 @@
 import db from "../db";
-import { BadRequestError } from "../expressError";
+import { BadRequestError, NotFoundError } from "../expressError";
+import { sqlForPartialUpdate } from "./helpers/sql";
 /**
  * Question model for creating, updating, deleting, and retrieving questions.
  */
@@ -51,7 +52,35 @@ class Question {
    *
    * @throws {NotFoundError} - if question not found
    */
-  static async update(id: number, data: Partial<QuestionDataToUpdate>): Promise<QuestionData> {}
+  static async update(id: number, data: Partial<QuestionDataToUpdate>):
+    Promise<QuestionData> {
+
+      const { sqlSetCols, values } = sqlForPartialUpdate(
+        data,
+        {assignmentId: "assignment_id",
+          questionText: "question_text",
+          answerText: "answer_text",
+        }
+      );
+      const idSanitationIdx = "$" + (values.length + 1);
+
+      const result = await db.query(`
+        UPDATE questions
+        SET ${sqlSetCols}
+        WHERE id = ${idSanitationIdx}
+        RETURNING id,
+                assignment_id AS "assignmentId",
+                question_text AS "questionText",
+                answer_text AS "answerText"`,
+              [...values, id]
+      );
+      const question = result.rows[0];
+
+      if(!question)
+        throw new NotFoundError(`No question found with id: ${id}`);
+
+      return question;
+    }
 
   /**
    * Delete a question from database by id.
@@ -73,7 +102,10 @@ class Question {
    *
    * @throws {NotFoundError} - if assignment not found
    */
-  static async getAllByAssignmentId(assignmentId: number): Promise<QuestionData[]> {}
+  static async getAllByAssignmentId(assignmentId: number):
+    Promise<QuestionData[]> {
+
+    }
 }
 
 type QuestionDataToCreate = {
