@@ -46,7 +46,7 @@ CREATE TABLE submissions (
     answer TEXT DEFAULT 'not answered',
     feedback TEXT,
     submitted_at timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uq_submission UNIQUE (student_username, assignment_id, question_id)
+    CONSTRAINT uq_submission_answer UNIQUE (student_username, assignment_id, question_id, answer)
 );
 
 CREATE TABLE sessions (
