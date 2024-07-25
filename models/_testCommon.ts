@@ -14,15 +14,22 @@ const testAssignmentsStudentsIds: number[] = [];
 
 async function commonBeforeAll() {
   // Delete data from all tables
-  await db.query('DELETE FROM messages');
-  await db.query('DELETE FROM sessions');
-  await db.query('DELETE FROM resources');
-  await db.query('DELETE FROM notes');
-  await db.query('DELETE FROM submissions');
-  await db.query('DELETE FROM questions');
-  await db.query('DELETE FROM assignments_students');
-  await db.query('DELETE FROM assignments');
-  await db.query('DELETE FROM users');
+  try{
+    await db.query('DELETE FROM messages');
+    await db.query('DELETE FROM sessions');
+    await db.query('DELETE FROM resources');
+    await db.query('DELETE FROM notes');
+    await db.query('DELETE FROM submissions');
+    await db.query('DELETE FROM questions');
+    await db.query('DELETE FROM assignments_students');
+    await db.query('DELETE FROM assignments');
+    await db.query('DELETE FROM users');
+
+    console.log('testAssignmentIds from commonBeforeAll', testAssignmentIds)
+  }catch(err){
+    console.error("Error in commonBeforeAll", err);
+    throw err;
+  }
 
   // Insert data into users table
   const resultsUsers = await db.query(`
