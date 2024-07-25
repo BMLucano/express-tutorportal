@@ -68,3 +68,5 @@ type QuestionData = {
   questionText: string;
   answerText: string;
 };
+
+export default Question;
