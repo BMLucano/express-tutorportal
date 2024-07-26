@@ -86,7 +86,17 @@ class Note {
    * @returns {undefined}
    * @throws {NotFoundError} - if note not found
    */
-  static async delete(id: number): Promise<void>{}
+  static async delete(id: number): Promise<void>{
+
+    const result = await db.query(`
+      DELETE FROM notes WHERE id = $1 RETURNING id`,
+    [id]
+    );
+    const note = result.rows[0];
+
+    if(!note)
+      throw new NotFoundError(`No note found with id: ${id}`);
+  }
 
   /**
    * Get a single note by id.
