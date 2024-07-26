@@ -110,8 +110,15 @@ describe("update", function () {
 
 describe("delete", function () {
   test("works", async function () {
-    await Resource.delete(1);
-    const result = await db.query(`SELECT * FROM resources WHERE id = 1`);
+    const newResource = await db.query(`
+      INSERT INTO resources (student_username, title, url, description)
+      VALUES ('u1', 'New Title', 'newurl', 'This is a test')
+      RETURNING id`)
+    const resourceId = newResource.rows[0].id;
+
+    await Resource.delete(resourceId);
+    const result = await db.query(`SELECT * FROM resources WHERE id = $1`,
+      [resourceId]);
     expect(result.rows).toEqual([]);
   });
 
