@@ -1,5 +1,6 @@
 import db from "../db";
 import { BadRequestError, NotFoundError } from "../expressError";
+import { studentExists } from "./helpers/dbHelpers";
 import { sqlForPartialUpdate } from "./helpers/sql";
 /**
  * Resource model for creating, updating, deleting, and retrieving resources.
@@ -145,7 +146,23 @@ class Resource {
    * @returns {ResourceData[]} - a list of all resources for a student
    * @throws {NotFoundError} - if student not found
    */
-  static async getResourcesByStudent(studentUsername: string): Promise<ResourceData[]>{}
+  static async getResourcesByStudent(studentUsername: string):
+    Promise<ResourceData[]>{
+
+      if(!(await studentExists(studentUsername)))
+        throw new NotFoundError(`No student with username: ${studentUsername}`);
+
+      const result = await db.query(`
+        SELECT id, student_username AS "studentUsername", title, url, description
+        FROM resources
+        WHERE student_username = $1
+        ORDER BY created_at DESC`,
+      [studentUsername]
+      );
+      const resources = result.rows;
+
+      return resources;
+    }
 }
 
 type ResourceDataToUpdate = {

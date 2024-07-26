@@ -191,11 +191,11 @@ describe("getResourcesByStudent", function () {
     let resources = await Resource.getResourcesByStudent("u1");
     expect(resources).toEqual([
       {
-        id: 1,
+        id: testResourceIds[0],
         studentUsername: "u1",
         title: "Resource1",
         url: "url1",
-        description: "This is a resource",
+        description: "Desc1",
       },
     ]);
   });
