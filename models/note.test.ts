@@ -5,12 +5,13 @@ import db from "../db";
 import Note from "./note";
 
 import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "node:test";
+import { afterEach, beforeEach } from "vitest";
 import {
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testSessionIds,
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -21,14 +22,15 @@ afterAll(commonAfterAll);
 /************ create */
 
 describe("create", function () {
-  const newNote = {
-    studentUsername: "u1",
-    title: "Note1",
-    contentPath: "path1",
-    sessionId: 1,
-  };
 
   test("works", async function () {
+    const newNote = {
+      studentUsername: "u1",
+      title: "Note1",
+      contentPath: "newPath",
+      sessionId: testSessionIds[0],
+    };
+
     let note = await Note.create(newNote);
     expect(note).toEqual({
       id: expect.any(Number),
@@ -38,19 +40,27 @@ describe("create", function () {
     const result = await db.query(
       `SELECT student_username, title, content_path, session_id
        FROM notes
-       WHERE student_username = 'u1' AND title = 'Note1' AND content_path = 'path1' AND session_id = 1`
+       WHERE student_username = 'u1' AND title = 'Note1' AND content_path = 'newPath' AND session_id = $1`,
+       [testSessionIds[0]]
     );
     expect(result.rows).toEqual([
       {
         student_username: "u1",
         title: "Note1",
-        content_path: "path1",
-        session_id: 1,
+        content_path: "newPath",
+        session_id: testSessionIds[0],
       },
     ]);
   });
 
   test("bad request with dupe", async function () {
+    const newNote = {
+      studentUsername: "u1",
+      title: "Note1",
+      contentPath: "path1",
+      sessionId: testSessionIds[0],
+    };
+
     try {
       await Note.create(newNote);
       await Note.create(newNote);

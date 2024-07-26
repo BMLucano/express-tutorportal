@@ -1,3 +1,6 @@
+import db from "../db";
+import { NotFoundError, BadRequestError } from "../expressError";
+
 /**
  * Note model for creating, updating, deleting, and retrieving notes.
  */
@@ -10,7 +13,29 @@ class Note {
    * @returns {NoteData} - the created note
    * @throws {BadRequestError} - if note already in db.
    */
-  static async create(data: NoteDataToCreate): Promise<NoteData>{}
+  static async create(data: NoteDataToCreate): Promise<NoteData>{
+    const{ studentUsername, title, contentPath, sessionId } = data;
+
+    const dupeCheck = await db.query(`
+      SELECT id FROM notes WHERE content_path = $1`, [contentPath]
+    );
+    if(dupeCheck.rows[0])
+      throw new BadRequestError(`Note already exists with content path ${contentPath}`);
+
+    const result = await db.query(`
+      INSERT INTO notes (student_username, title, content_path, session_id)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id,
+                student_username AS "studentUsername",
+                title,
+                content_path AS "contentPath",
+                session_id AS "sessionId"`,
+      [studentUsername, title, contentPath, sessionId]
+    );
+    const note = result.rows[0];
+
+    return note;
+  }
 
 
   /**
