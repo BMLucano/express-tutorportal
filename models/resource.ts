@@ -126,7 +126,16 @@ class Resource {
    *
    * @returns {ResourceData[]} - a list of all sessions
    */
-    static async getAll(): Promise<ResourceData[]>{}
+    static async getAll(): Promise<ResourceData[]>{
+
+      const result = await db.query(`
+        SELECT id, student_username AS "studentUsername", title, url, description
+        FROM resources`
+      );
+      const resources = result.rows;
+
+      return resources;
+    }
 
 
   /**

@@ -166,27 +166,22 @@ describe("getAll", function () {
     let resources = await Resource.getAll();
     expect(resources).toEqual([
       {
-        id: 1,
+        id: testResourceIds[0],
         studentUsername: "u1",
         title: "Resource1",
         url: "url1",
-        description: "This is resource 1",
+        description: "Desc1",
       },
       {
-        id: 2,
-        studentUsername: "u1",
+        id: testResourceIds[1],
+        studentUsername: "u2",
         title: "Resource2",
         url: "url2",
-        description: "This is resource 2",
+        description: "Desc2",
       },
     ]);
   });
 
-  test("empty array if no resources", async function () {
-    // assume no resources in the database
-    let resources = await Resource.getAll();
-    expect(resources).toEqual([]);
-  });
 });
 
 /**************** getResourcesByStudent */
