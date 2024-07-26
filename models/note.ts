@@ -164,7 +164,8 @@ class Note {
              content_path AS "contentPath",
              session_id AS "sessionId"
       FROM notes
-      WHERE student_username = $1`,
+      WHERE student_username = $1
+      ORDER BY created_at DESC `,
     [studentUsername]
     );
     const notes = result.rows;
