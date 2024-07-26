@@ -85,7 +85,17 @@ class Resource {
    * @returns {undefined}
    * @throws {NotFoundError} - if resource not found
    */
-  static async delete(id: number): Promise<void>{}
+  static async delete(id: number): Promise<void>{
+
+    const result = await db.query(`
+      DELETE FROM resources WHERE id = $1 RETURNING id`,
+      [id]
+    );
+    const resource = result.rows[0];
+
+    if (!resource)
+      throw new NotFoundError(`No resource found with id: ${id}`);
+  }
 
   /**
    * Get a single resource by id.
