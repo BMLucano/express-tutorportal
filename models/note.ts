@@ -1,6 +1,7 @@
 import db from "../db";
 import { NotFoundError, BadRequestError } from "../expressError";
 import { sqlForPartialUpdate } from "./helpers/sql";
+import { studentExists } from "./helpers/dbHelpers";
 
 /**
  * Note model for creating, updating, deleting, and retrieving notes.
@@ -139,7 +140,6 @@ class Note {
         FROM notes
         ORDER BY id`);
       const notes = result.rows;
-      console.log("notes in fuunc", notes)
 
       return notes;
     }
@@ -151,7 +151,26 @@ class Note {
    * @returns {NoteData[]} - a list of all notes for a student
    * @throws {NotFoundError} - if student not found
    */
-  static async getNotesByStudent(studentUsername: string): Promise<NoteData[]>{}
+  static async getNotesByStudent(studentUsername: string): Promise<NoteData[]>{
+
+    if(!(await studentExists(studentUsername))){
+      throw new NotFoundError(`No student found with username: ${studentUsername}`);
+    }
+
+    const result = await db.query(`
+      SELECT id,
+             student_username AS "studentUsername",
+             title,
+             content_path AS "contentPath",
+             session_id AS "sessionId"
+      FROM notes
+      WHERE student_username = $1`,
+    [studentUsername]
+    );
+    const notes = result.rows;
+
+    return notes;
+  }
 
   /**
    * Gets Notes based on a session.

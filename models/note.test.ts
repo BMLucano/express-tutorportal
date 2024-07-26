@@ -205,11 +205,11 @@ describe("getNotesByStudent", function () {
     let notes = await Note.getNotesByStudent("u1");
     expect(notes).toEqual([
       {
-        id: 1,
+        id: testNoteIds[0],
         studentUsername: "u1",
         title: "Note1",
         contentPath: "path1",
-        sessionId: 1,
+        sessionId: testSessionIds[0],
       },
     ]);
   });
