@@ -12,6 +12,7 @@ import {
   commonAfterEach,
   commonAfterAll,
   testSessionIds,
+  testUserIds,
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -119,8 +120,18 @@ describe("update", function () {
 
 describe("delete", function () {
   test("works", async function () {
-    await Note.delete(1);
-    const result = await db.query(`SELECT * FROM notes WHERE id = 1`);
+    const result = await db.query(`
+      INSERT INTO notes (student_username, title, content_path, session_id)
+      VALUES ($1, 'Note Title', 'Test Path', $2)
+      RETURNING id`,
+    [testUserIds[0], testSessionIds[0]]);
+    const noteId = result.rows[0].id
+
+    await Note.delete(noteId);
+
+    const deletedResult = await db.query(`SELECT * FROM notes WHERE id = $1`,
+      [noteId]
+    );
     expect(result.rows).toEqual([]);
   });
 
