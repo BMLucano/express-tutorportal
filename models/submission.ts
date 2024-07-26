@@ -1,6 +1,7 @@
 import { aN } from "vitest/dist/reporters-yx5ZTtEV";
 import db from "../db";
 import { NotFoundError } from "../expressError";
+import { studentExists, assignmentExists } from "./helpers/dbHelpers";
 /**
  * Submission model for creating, updating, and retrieving submissions.
  */
@@ -8,8 +9,8 @@ import { NotFoundError } from "../expressError";
 class Submission {
   /**
    * Creates a new submission and updates db
-   * @param {SubmissionDataToCreate }data - The submission data
-   * @returns The created Submission
+   * @param {SubmissionDataToCreate}data - The submission data
+   * @returns {SubmissionData | null}The created Submission
    */
   static async create(data: SubmissionDataToCreate):
     Promise<SubmissionData | null>{
@@ -43,9 +44,9 @@ class Submission {
 
   /**
    * Adds feedback to a submission
-   * @param id - The ID of the submission
-   * @param feedback - The feedback to add
-   * @returns Promise<SubmissionData> - The updated submission
+   * @param {number} id - The ID of the submission
+   * @param {string} feedback - The feedback to add
+   * @returns {SubmissionData} - The updated submission
    * @throws {NotFoundError} - if submission id not found
    * TODO: what do I want this to return? Currently returning feedback
    */
@@ -69,21 +70,62 @@ class Submission {
 
   /**
    * Retrieves submissions by student
-   * @param studentUsername - The username of the student
-   * @returns A list of submissions by the student
+   * @param {string} studentUsername - The username of the student
+   * @returns {SubmissionData[]} - A list of submissions by the student
    * @throws {NotFoundError} - if student not found
    *
    */
-  static async getSubmissionsByStudent(studentUsername: string): Promise<SubmissionData[]> {
+  static async getSubmissionsByStudent(studentUsername: string):
+    Promise<SubmissionData[]> {
+
+      if(!(await studentExists(studentUsername))){
+        throw new NotFoundError(`Student ${studentUsername} not found`);
+      }
+
+      const result = await db.query(`
+        SELECT id,
+               student_username AS "studentUsername",
+               assignment_id AS "assignmentId",
+               question_id AS "questionId",
+               answer,
+               feedback
+        FROM submissions
+        WHERE student_username = $1`,
+      [studentUsername]
+    );
+    const submissions = result.rows;
+
+    return submissions;
   }
 
   /**
    * Retrieves submissions by assignment
-   * @param assignmentId - The ID of the assignment
-   * @returns A list of submissions for the assignment
+   * @param {number} assignmentId - The ID of the assignment
+   * @returns {SubmissionData[]} - A list of submissions for the assignment
    * @throws {NotFoundError} - if assignment not found
    */
-  static async getSubmissionsByAssignment(assignmentId: number): Promise<SubmissionData[]> {
+  static async getSubmissionsByAssignment(assignmentId: number):
+    Promise<SubmissionData[]> {
+
+      if(!(await assignmentExists(assignmentId))){
+        throw new NotFoundError(`Assignment ${assignmentId} not found`);
+      }
+
+      const result = await db.query(`
+        SELECT id,
+              student_username AS "studentUsername",
+              assignment_id AS "assignmentId",
+              question_id AS "questionId",
+              answer,
+              feedback
+      FROM submissions
+      WHERE assignment_id = $1`,
+      [assignmentId]
+    );
+    const submissions = result.rows;
+
+    return submissions;
+
   }
 
   /**
@@ -105,7 +147,7 @@ type SubmissionDataToCreate = {
 };
 
 type SubmissionData = {
-  id?: number;
+  id: number;
   studentUsername: string;
   assignmentId: number;
   questionId: number;

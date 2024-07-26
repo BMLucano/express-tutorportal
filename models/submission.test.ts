@@ -8,7 +8,7 @@ import db from "../db";
 import Submission from "./submission";
 
 import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "node:test";
+import { afterEach, beforeEach } from "vitest";
 import {
   commonBeforeAll,
   commonBeforeEach,
@@ -114,9 +114,11 @@ describe("getSubmissionByStudent", function() {
   test("works", async function() {
     let submissions = await Submission.getSubmissionsByStudent("u1");
     expect(submissions).toEqual([{
+      id: expect.any(Number),
+      feedback: "No feedback",
       studentUsername: "u1",
-      assignmentId: 1,
-      questionId: 1,
+      assignmentId: testAssignmentIds[0],
+      questionId: testQuestionIds[0],
       answer: "not answered",
     }]);
   })
@@ -136,11 +138,13 @@ describe("getSubmissionByStudent", function() {
 
 describe("getSubmissionByAssignment", function() {
   test("works", async function() {
-    let submissions = await Submission.getSubmissionsByAssignment(1);
+    let submissions = await Submission.getSubmissionsByAssignment(testAssignmentIds[0]);
     expect(submissions).toEqual([{
+      id: expect.any(Number),
+      feedback: "No feedback",
       studentUsername: "u1",
-      assignmentId: 1,
-      questionId: 1,
+      assignmentId: testAssignmentIds[0],
+      questionId: testQuestionIds[0],
       answer: "not answered",
     }]);
   })
