@@ -128,7 +128,21 @@ class Note {
    * Get all notes.
    * @returns {NoteData[]} - note
    */
-    static async getAll(): Promise<NoteData[]>{}
+    static async getAll(): Promise<NoteData[]>{
+
+      const result = await db.query(`
+        SELECT id,
+               student_username AS "studentUsername",
+               title,
+               content_path AS "contentPath",
+               session_id AS "sessionId"
+        FROM notes
+        ORDER BY id`);
+      const notes = result.rows;
+      console.log("notes in fuunc", notes)
+
+      return notes;
+    }
 
   /**
    * Gets notes based on student.

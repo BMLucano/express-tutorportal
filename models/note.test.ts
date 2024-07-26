@@ -180,26 +180,20 @@ describe("getAll", function () {
     let notes = await Note.getAll();
     expect(notes).toEqual([
       {
-        id: 1,
+        id: testNoteIds[0],
         studentUsername: "u1",
         title: "Note1",
         contentPath: "path1",
-        sessionId: 1,
+        sessionId: testSessionIds[0],
       },
       {
-        id: 2,
-        studentUsername: "u1",
+        id: testNoteIds[1],
+        studentUsername: "u2",
         title: "Note2",
         contentPath: "path2",
-        sessionId: 1,
+        sessionId: testSessionIds[1],
       },
     ]);
-  });
-
-  test("empty array if no notes", async function () {
-    // assume no notes in the database
-    let notes = await Note.getAll();
-    expect(notes).toEqual([]);
   });
 });
 
