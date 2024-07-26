@@ -13,6 +13,7 @@ import {
   commonAfterAll,
   testSessionIds,
   testUserIds,
+  testNoteIds,
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -82,25 +83,26 @@ describe("update", function () {
   };
 
   test("works", async function () {
-    let note = await Note.update(1, updateNote);
+    let note = await Note.update(testNoteIds[0], updateNote);
     expect(note).toEqual({
-      id: 1,
+      id: testNoteIds[0],
       studentUsername: "u1",
       ...updateNote,
-      sessionId: 1,
+      sessionId: testSessionIds[0],
     });
 
     const result = await db.query(
       `SELECT student_username, title, content_path, session_id
        FROM notes
-       WHERE id = 1`
+       WHERE id = $1`,
+       [testNoteIds[0]]
     );
     expect(result.rows).toEqual([
       {
         student_username: "u1",
         title: "New Title",
         content_path: "New Path",
-        session_id: 1,
+        session_id: testSessionIds[0],
       },
     ]);
   });
@@ -132,7 +134,7 @@ describe("delete", function () {
     const deletedResult = await db.query(`SELECT * FROM notes WHERE id = $1`,
       [noteId]
     );
-    expect(result.rows).toEqual([]);
+    expect(deletedResult.rows).toEqual([]);
   });
 
   test("not found", async function () {

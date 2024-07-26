@@ -1,5 +1,6 @@
 import db from "../db";
 import { NotFoundError, BadRequestError } from "../expressError";
+import { sqlForPartialUpdate } from "./helpers/sql";
 
 /**
  * Note model for creating, updating, deleting, and retrieving notes.
@@ -41,12 +42,41 @@ class Note {
   /**
    * Updates a note in db with partial data or all data.
    *
-   * @param{NoteDataToUpdate} data - Partial or full note data to update.
+   * @param {NoteDataToUpdate} data - Partial or full note data to update.
    * @param {number} id -Note id to update
    * @returns {NoteData} - Updated note
    * @throws {NotFoundError} - if note not found
    */
-  static async update(id: number, data:NoteDataToUpdate): Promise<NoteData>{}
+  static async update(id: number, data:NoteDataToUpdate): Promise<NoteData>{
+
+    const { sqlSetCols, values } = sqlForPartialUpdate(
+      data,
+      {
+        studentUsername : "student_username",
+        contentPath: "content_path",
+        sessionId: "session_id"
+      }
+    );
+    const idSanitationIdx = "$" + (values.length + 1);
+
+    const result = await db.query(`
+      UPDATE notes
+      SET ${sqlSetCols}
+      WHERE id = ${idSanitationIdx}
+      RETURNING id,
+          student_username AS "studentUsername",
+          title,
+          content_path AS "contentPath",
+          session_id AS "sessionId"`,
+        [...values, id]
+      );
+      const note = result.rows[0];
+
+      if(!note)
+        throw new NotFoundError(`No note found with id: ${id}`);
+
+      return note;
+  }
 
 
   /**
