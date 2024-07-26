@@ -164,11 +164,13 @@ describe("getSubmissionByAssignment", function() {
 
 describe("getSubmissionByStudentAndAssignment", function() {
   test("works", async function() {
-    let submissions = await Submission.getSubmissionsByStudentAndAssignment("u1", 1);
+    let submissions = await Submission.getSubmissionsByStudentAndAssignment("u1", testAssignmentIds[0]);
     expect(submissions).toEqual([{
+      id: expect.any(Number),
+      feedback: "No feedback",
       studentUsername: "u1",
-      assignmentId: 1,
-      questionId: 1,
+      assignmentId: testAssignmentIds[0],
+      questionId: testQuestionIds[0],
       answer: "not answered",
     }]);
   })

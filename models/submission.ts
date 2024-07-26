@@ -99,6 +99,7 @@ class Submission {
   }
 
   /**
+   * TODO: DO I NEED THIS?
    * Retrieves submissions by assignment
    * @param {number} assignmentId - The ID of the assignment
    * @returns {SubmissionData[]} - A list of submissions for the assignment
@@ -112,30 +113,72 @@ class Submission {
       }
 
       const result = await db.query(`
-        SELECT id,
+      SELECT id,
               student_username AS "studentUsername",
               assignment_id AS "assignmentId",
               question_id AS "questionId",
               answer,
               feedback
       FROM submissions
-      WHERE assignment_id = $1`,
+      WHERE assignment_id = $1
+ `,
       [assignmentId]
     );
     const submissions = result.rows;
 
     return submissions;
-
   }
 
   /**
    * Retrieves submissions by student and assignment
-   * @param studentUsername - The username of the student
-   * @param assignmentId - The ID of the assignment
+   * @param {string} studentUsername - The username of the student
+   * @param {number}assignmentId - The ID of the assignment
    * @returns The submissions for the student and assignment
    * @throws {NotFoundError} - if student or assignment not found
    */
-  static async getSubmissionsByStudentAndAssignment(studentUsername: string, assignmentId: number): Promise<SubmissionData> {
+  static async getSubmissionsByStudentAndAssignment(
+    studentUsername: string, assignmentId: number):
+    Promise<SubmissionData[]> {
+
+      if(!(await studentExists(studentUsername))){
+        throw new NotFoundError(`Student ${studentUsername} not found`);
+      }
+      if(!(await assignmentExists(assignmentId))){
+        throw new NotFoundError(`Assignment ${assignmentId} not found`);
+      }
+
+      const result = await db.query(`
+        WITH LatestSubmissions AS (
+          SELECT
+              id,
+              student_username AS "studentUsername",
+              assignment_id AS "assignmentId",
+              question_id AS "questionId",
+              answer,
+              feedback,
+              submitted_at,
+              ROW_NUMBER() OVER (PARTITION BY question_id ORDER BY submitted_at DESC) AS rn
+          FROM
+              submissions
+          WHERE
+              assignment_id = $1 AND student_username = $2
+      )
+      SELECT
+          id,
+          "studentUsername",
+          "assignmentId",
+          "questionId",
+          answer,
+          feedback
+      FROM
+          LatestSubmissions
+      WHERE
+          rn = 1;`,
+        [assignmentId, studentUsername]
+    );
+    const submissions = result.rows;
+
+    return submissions;
   }
 }
 type SubmissionDataToCreate = {
