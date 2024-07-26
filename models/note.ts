@@ -105,7 +105,24 @@ class Note {
    * @returns {NoteData} - note
    * @throws {NotFoundError} - if note not found
    */
-  static async get(id: number): Promise<NoteData>{}
+  static async get(id: number): Promise<NoteData>{
+
+    const result = await db.query(`
+      SELECT id,
+             student_username AS "studentUsername",
+             title,
+             content_path AS "contentPath",
+             session_id AS "sessionId"
+      FROM notes
+      WHERE id = $1`, [id]
+    );
+    const note = result.rows[0];
+
+    if(!note)
+      throw new NotFoundError(`No note found with id: ${id}`);
+
+    return note;
+  }
 
   /**
    * Get all notes.

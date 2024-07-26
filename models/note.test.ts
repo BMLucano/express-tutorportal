@@ -152,13 +152,13 @@ describe("delete", function () {
 
 describe("get", function () {
   test("works", async function () {
-    let note = await Note.get(1);
+    let note = await Note.get(testNoteIds[0]);
     expect(note).toEqual({
-      id: 1,
+      id: testNoteIds[0],
       studentUsername: "u1",
       title: "Note1",
       contentPath: "path1",
-      sessionId: 1,
+      sessionId: testSessionIds[0],
     });
   });
 
