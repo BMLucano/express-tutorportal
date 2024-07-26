@@ -1,5 +1,6 @@
 import { aN } from "vitest/dist/reporters-yx5ZTtEV";
 import db from "../db";
+import { NotFoundError } from "../expressError";
 /**
  * Submission model for creating, updating, and retrieving submissions.
  */
@@ -46,9 +47,24 @@ class Submission {
    * @param feedback - The feedback to add
    * @returns Promise<SubmissionData> - The updated submission
    * @throws {NotFoundError} - if submission id not found
-   * TODO: what do I want this to return? Double check test.
+   * TODO: what do I want this to return? Currently returning feedback
    */
-  static async addFeedback(id: number, feedback: string): Promise<SubmissionData> {
+  static async addFeedback(id: number, feedback: string):
+    Promise<{feedback: string}> {
+
+      const result = await db.query(`
+        UPDATE submissions
+        SET feedback = $1
+        WHERE id = $2
+        RETURNING feedback`,
+              [feedback, id]
+      );
+      const submissionFeedback = result.rows[0];
+
+      if(!submissionFeedback)
+        throw new NotFoundError(`No submission with id: ${id}`);
+
+      return submissionFeedback;
   }
 
   /**

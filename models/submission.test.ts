@@ -16,6 +16,7 @@ import {
   commonAfterAll,
   testAssignmentIds,
   testQuestionIds,
+  testSubmissionIds
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -80,13 +81,14 @@ describe("addFeedback", function () {
   const feedback = "Great job!";
 
   test("works", async function () {
-    let submission = await Submission.addFeedback(1, feedback);
+    let submission = await Submission.addFeedback(testSubmissionIds[0], feedback);
     expect(submission.feedback).toBe(feedback);
 
     const result = await db.query(
       `SELECT feedback
        FROM submissions
-       WHERE id = 1`
+       WHERE id = $1`,
+       [testSubmissionIds[0]]
     );
     expect(result.rows).toEqual([
       {
