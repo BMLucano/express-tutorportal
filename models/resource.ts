@@ -47,7 +47,35 @@ class Resource {
    * @returns {ResourceData} - Updated resource
    * @throws {NotFoundError} - if resource not found
    */
-  static async update(id: number, data: ResourceDataToUpdate): Promise<ResourceData>{}
+  static async update(id: number, data: ResourceDataToUpdate):
+    Promise<ResourceData>{
+
+      const { sqlSetCols, values } = sqlForPartialUpdate(
+        data,
+        {
+          studentUsername: "student_username",
+        }
+      );
+      const idSanitationIdx = "$" + (values.length + 1);
+
+      const result = await db.query(`
+        UPDATE resources
+        SET ${sqlSetCols}
+        WHERE id = ${idSanitationIdx}
+        RETURNING id,
+                  student_username AS "studentUsername",
+                  title,
+                  url,
+                  description`,
+                [...values, id]
+      );
+      const resource = result.rows[0];
+
+      if(!resource)
+        throw new NotFoundError(`No resource found with id: ${id}`);
+
+      return resource;
+    }
 
 
   /**

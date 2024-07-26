@@ -11,6 +11,7 @@ import {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testResourceIds,
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -72,25 +73,25 @@ describe("update", function () {
   };
 
   test("works", async function () {
-    let resource = await Resource.update(1, updateData);
+    let resource = await Resource.update(testResourceIds[0], updateData);
     expect(resource).toEqual({
-      id: 1,
+      id: testResourceIds[0],
       studentUsername: "u1",
       ...updateData,
-      description: "This is a resource",
+      description: "Desc1",
     });
 
     const result = await db.query(
       `SELECT student_username, title, url, description
        FROM resources
-       WHERE id = 1`
+       WHERE id = $1`, [testResourceIds[0]]
     );
     expect(result.rows).toEqual([
       {
         student_username: "u1",
         title: "New Title",
         url: "newurl1",
-        description: "This is a resource",
+        description: "Desc1",
       },
     ]);
   });
