@@ -5,7 +5,7 @@ import db from "../db";
 import Resource from "./resource";
 
 import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "node:test";
+import { afterEach, beforeEach } from "vitest";
 import {
   commonBeforeAll,
   commonBeforeEach,

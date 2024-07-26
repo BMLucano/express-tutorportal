@@ -1,3 +1,6 @@
+import db from "../db";
+import { BadRequestError, NotFoundError } from "../expressError";
+import { sqlForPartialUpdate } from "./helpers/sql";
 /**
  * Resource model for creating, updating, deleting, and retrieving resources.
  */
@@ -10,7 +13,30 @@ class Resource {
    * @returns {ResourceData} - the created resource
    * @throws {BadRequestError} - if resource already in db.
    */
-  static async create(data: ResourceDataToCreate): Promise<ResourceData>{}
+  static async create(data: ResourceDataToCreate): Promise<ResourceData>{
+    const { studentUsername, title, url, description } = data;
+
+    const dupeCheck = await db.query(`
+      SELECT id FROM resources WHERE url = $1`,
+      [url]
+    );
+    if(dupeCheck.rows[0])
+      throw new BadRequestError(`Resource already exists with url: ${url}`);
+
+    const result = await db.query(`
+      INSERT INTO resources (student_username, title, url, description)
+      VALUES ($1, $2, $3, $4)
+      RETURNING id,
+                student_username AS "studentUsername",
+                title,
+                url,
+                description`,
+      [studentUsername, title, url, description]
+    );
+    const resource = result.rows[0];
+
+    return resource;
+  }
 
 
   /**
