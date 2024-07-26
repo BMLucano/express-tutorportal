@@ -229,14 +229,14 @@ describe("getNotesByStudent", function () {
 
 describe("getNotesBySession", function () {
   test("works", async function () {
-    let notes = await Note.getNotesBySession(1);
+    let notes = await Note.getNotesBySession(testSessionIds[0]);
     expect(notes).toEqual([
       {
-        id: 1,
+        id: testNoteIds[0],
         studentUsername: "u1",
         title: "Note1",
         contentPath: "path1",
-        sessionId: 1,
+        sessionId: testSessionIds[0],
       },
     ]);
   });

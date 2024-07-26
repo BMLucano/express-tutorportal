@@ -179,7 +179,28 @@ class Note {
    * @returns {NoteData[]} - a list of all notes for a session
    * @throws {NotFoundError} - if session not found
    */
-  static async getNotesBySession(sessionId: number): Promise<NoteData[]>{}
+  static async getNotesBySession(sessionId: number): Promise<NoteData[]>{
+
+    const sResult = await db.query(`
+      SELECT id FROM sessions WHERE id = $1`, [sessionId]);
+
+    if(!sResult.rows[0])
+      throw new NotFoundError(`No session found with id: ${sessionId}`);
+
+    const result = await db.query(`
+      SELECT id,
+             student_username AS "studentUsername",
+             title,
+             content_path AS "contentPath",
+             session_id AS "sessionId"
+      FROM notes
+      WHERE session_id = $1`,
+    [sessionId]
+    );
+    const notes = result.rows;
+
+    return notes;
+  }
 }
 
 type NoteDataToUpdate = {
