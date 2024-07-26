@@ -104,7 +104,22 @@ class Resource {
    * @returns {ResourceData} - Resource
    * @throws {NotFoundError} - if resource not found
    */
-  static async get(id: number): Promise<ResourceData>{}
+  static async get(id: number): Promise<ResourceData>{
+
+    const result = await db.query(`
+      SELECT id, student_username AS "studentUsername", title, url, description
+      FROM resources
+      WHERE id = $1`,
+    [id]
+    );
+    const resource = result.rows[0];
+
+    if(!resource)
+      throw new NotFoundError(`No resource found with id: ${id}`);
+
+    return resource;
+
+  }
 
   /**
    * Gets all resources.

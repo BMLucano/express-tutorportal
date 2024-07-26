@@ -138,13 +138,13 @@ describe("delete", function () {
 
 describe("get", function () {
   test("works", async function () {
-    let resource = await Resource.get(1);
+    let resource = await Resource.get(testResourceIds[0]);
     expect(resource).toEqual({
-      id: 1,
+      id: testResourceIds[0],
       studentUsername: "u1",
       title: "Resource1",
       url: "url1",
-      description: "This is a resource",
+      description: "Desc1",
     });
   });
 
