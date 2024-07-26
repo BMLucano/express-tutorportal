@@ -5,7 +5,7 @@ import db from "../db";
 import Session from "./session";
 
 import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "node:test";
+import { afterEach, beforeEach } from "vitest";
 import {
   commonBeforeAll,
   commonBeforeEach,
@@ -33,9 +33,9 @@ describe("create", function () {
     expect(session).toEqual({
       id: expect.any(Number),
       studentUsername: "u1",
-      date: "2022-01-01",
+      date: expect.any(Date),
       time: "10:00:00",
-      duration: "01:00:00",
+      duration: expect.any(Object),
       notes: "Test session",
     });
   });

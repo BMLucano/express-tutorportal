@@ -1,3 +1,7 @@
+import db from "../db";
+import { NotFoundError, BadRequestError } from "../expressError";
+import { sqlForPartialUpdate } from "./helpers/sql";
+
 class Session {
   /**
    * Creates a new session and updates db.
@@ -5,7 +9,31 @@ class Session {
    * @returns {SessionData} - the created session
    * @throws {BadRequestError} - if session already in db.
    */
-  static async create(data: SessionDataToCreate): Promise<SessionData>{}
+  static async create(data: SessionDataToCreate): Promise<SessionData>{
+const { studentUsername, date, time, duration, notes } = data;
+
+    const dupeCheck = await db.query(`
+      SELECT id FROM sessions WHERE date = $1 AND time = $2`,
+      [date, time]
+    );
+    if(dupeCheck.rows[0])
+      throw new BadRequestError(`
+        Session already exists with date and time: ${date} at ${time}`);
+
+    const result = await db.query(`
+      INSERT INTO sessions (student_username, date, time, duration, notes)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING id,
+                student_username AS "studentUsername",
+                date,
+                time,
+                duration,
+                notes`, [studentUsername, date, time, duration, notes]
+    );
+    const session = result.rows[0];
+
+    return session;
+  }
 
 
   /**
