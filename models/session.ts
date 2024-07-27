@@ -85,6 +85,16 @@ const { studentUsername, date, time, duration, notes } = data;
    */
   static async delete(id: number): Promise<void>{
 
+    const result = await db.query(`
+      DELETE FROM sessions
+      WHERE id = $1
+      RETURNING id`, [id]
+    );
+    const session = result.rows[0];
+
+    if(!session)
+      throw new NotFoundError(`No session with id: ${id}`);
+
   }
 
 
