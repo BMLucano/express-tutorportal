@@ -139,7 +139,8 @@ const { studentUsername, date, time, duration, notes } = data;
       const result = await db.query(`
         SELECT id, student_username AS "studentUsername", date, time, duration, notes
         FROM sessions
-        WHERE student_username = $1`,
+        WHERE student_username = $1
+        ORDER BY date DESC`,
       [studentUsername]
       );
       const sessions = result.rows;
