@@ -1,6 +1,7 @@
 import db from "../db";
 import { NotFoundError, BadRequestError } from "../expressError";
 import { sqlForPartialUpdate } from "./helpers/sql";
+import { studentExists } from "./helpers/dbHelpers";
 
 class Session {
   /**
@@ -114,7 +115,6 @@ const { studentUsername, date, time, duration, notes } = data;
     [id]
     );
     const session = result.rows[0];
-    console.log("session infunc", session)
 
     if(!session)
       throw new NotFoundError(`No sessionmattching id: ${id}`);
@@ -130,7 +130,22 @@ const { studentUsername, date, time, duration, notes } = data;
    * @returns {SessionData[]} - a list of all sessions for a student
    * @throws {NotFoundError} - if student not found
    */
-  static async getSessionsByStudent(studentUsername: string): Promise<SessionData[]>{}
+  static async getSessionsByStudent(studentUsername: string):
+    Promise<SessionData[]>{
+
+      if(!(await studentExists(studentUsername)))
+        throw new NotFoundError(`No student found with username ${studentUsername}`);
+
+      const result = await db.query(`
+        SELECT id, student_username AS "studentUsername", date, time, duration, notes
+        FROM sessions
+        WHERE student_username = $1`,
+      [studentUsername]
+      );
+      const sessions = result.rows;
+
+      return sessions;
+    }
 
 
   /**
