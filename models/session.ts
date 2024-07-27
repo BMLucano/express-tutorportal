@@ -44,7 +44,36 @@ const { studentUsername, date, time, duration, notes } = data;
    * @returns {SessionData} - Updated session
    * @throws {NotFoundError} - if session not found
    */
-  static async update(id: number, data: SessionDataToUpdate): Promise<SessionData>{}
+  static async update(id: number, data: SessionDataToUpdate):
+    Promise<SessionData>{
+
+      const { sqlSetCols, values } = sqlForPartialUpdate(
+        data,
+        {
+          studentUsername : "student_username",
+        }
+      );
+      const idSanitationIdx = "$" + (values.length + 1);
+
+      const result = await db.query(`
+        UPDATE sessions
+        SET ${sqlSetCols}
+        WHERE id = ${idSanitationIdx}
+        RETURNING id,
+                  student_username AS "studentUsername",
+                  date,
+                  time,
+                  duration,
+                  notes`,
+                [...values, id]
+      );
+      const session = result.rows[0];
+
+      if(!session)
+        throw new NotFoundError(`No session with id: ${id}`);
+
+      return session;
+    }
 
 
   /**

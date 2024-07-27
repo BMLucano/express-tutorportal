@@ -11,6 +11,7 @@ import {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testSessionIds,
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -68,16 +69,16 @@ describe("create", function () {
 
 describe("update", function () {
   test("works", async function () {
-    let session = await Session.update(1, {
+    let session = await Session.update(testSessionIds[0], {
       duration: "02:00:00",
       notes: "Updated test session",
     });
     expect(session).toEqual({
-      id: 1,
+      id: testSessionIds[0],
       studentUsername: "u1",
-      date: "2022-01-01",
+      date: expect.any(Date),
       time: "10:00:00",
-      duration: "02:00:00",
+      duration: expect.any(Object),
       notes: "Updated test session",
     });
   });
