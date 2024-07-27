@@ -105,7 +105,22 @@ const { studentUsername, date, time, duration, notes } = data;
    * @returns {SessionData} - The session data
    * @throws {NotFoundError} - if session not found
    */
-  static async get(id: number): Promise<SessionData>{}
+  static async get(id: number): Promise<SessionData>{
+
+    const result = await db.query(`
+      SELECT id, student_username AS "studentUsername", date, time, duration, notes
+      FROM sessions
+      WHERE id = $1`,
+    [id]
+    );
+    const session = result.rows[0];
+    console.log("session infunc", session)
+
+    if(!session)
+      throw new NotFoundError(`No sessionmattching id: ${id}`);
+
+    return session;
+  }
 
 
   /**

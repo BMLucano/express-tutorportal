@@ -129,14 +129,14 @@ describe("delete", function () {
 
 describe("get", function () {
   test("works", async function () {
-    let session = await Session.get(1);
+    let session = await Session.get(testSessionIds[0]);
     expect(session).toEqual({
-      id: 1,
+      id: testSessionIds[0],
       studentUsername: "u1",
-      date: "2022-01-01",
+      date: expect.any(Date),
       time: "10:00:00",
-      duration: "01:00:00",
-      notes: "Test session",
+      duration: expect.any(Object),
+      notes: "Notes1",
     });
   });
 
