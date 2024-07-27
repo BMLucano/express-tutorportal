@@ -101,8 +101,16 @@ describe("update", function () {
 
 describe("delete", function () {
   test("works", async function () {
-    await Session.delete(1);
-    const result = await db.query(`SELECT * FROM sessions WHERE id = 1`);
+    const newSess = await db.query(`
+      INSERT INTO sessions (student_username, date, time, duration, notes)
+      VALUES ('u1', '2024-07-27', '10:00:00', '01:00:00', 'test')
+      RETURNING id`)
+    const newSessId = newSess.rows[0].id;
+
+    await Session.delete(newSessId);
+    const result = await db.query(`SELECT * FROM sessions WHERE id = $1`,
+      [newSessId],
+    );
     expect(result.rows).toEqual([]);
   });
 

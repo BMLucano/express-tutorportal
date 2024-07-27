@@ -83,7 +83,9 @@ const { studentUsername, date, time, duration, notes } = data;
    * @returns {undefined}
    * @throws {NotFoundError} - if session not found
    */
-  static async delete(id: number): Promise<void>{}
+  static async delete(id: number): Promise<void>{
+
+  }
 
 
   /**
