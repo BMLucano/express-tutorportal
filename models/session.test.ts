@@ -158,13 +158,22 @@ describe("getAll", function () {
     let sessions = await Session.getAll();
     expect(sessions).toEqual([
       {
-        id: 1,
+        id: testSessionIds[0],
         studentUsername: "u1",
-        date: "2022-01-01",
+        date: expect.any(Date),
         time: "10:00:00",
-        duration: "01:00:00",
-        notes: "Test session",
+        duration: expect.any(Object),
+        notes: "Notes1",
       },
+      {
+        id: testSessionIds[1],
+        studentUsername: "u2",
+        date: expect.any(Date),
+        time: "11:00:00",
+        duration: expect.any(Object),
+        notes: "Notes2",
+      },
+
     ]);
   });
 });

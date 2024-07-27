@@ -153,7 +153,15 @@ const { studentUsername, date, time, duration, notes } = data;
    *
    * @returns {SessionData[]} - a list of all sessions
    */
-  static async getAll(): Promise<SessionData[]>{}
+  static async getAll(): Promise<SessionData[]>{
+
+    const result = await db.query(`
+      SELECT id, student_username AS "studentUsername", date, time, duration, notes
+      FROM sessions`);
+    const sessions = result.rows;
+
+    return sessions;
+  }
 }
 
 type SessionDataToUpdate = {
