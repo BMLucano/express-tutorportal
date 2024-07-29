@@ -208,4 +208,11 @@ type AssignmentStudentData = {
   status: string;
 };
 
+type QuestionData = {
+  id: number;
+  assignmentId: number;
+  questionText: string;
+  answerText: string;
+};
+
 export default AssignmentStudent;
