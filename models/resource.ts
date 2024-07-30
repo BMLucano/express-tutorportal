@@ -179,7 +179,7 @@ type ResourceDataToCreate = {
   description?: string,
 }
 
-type ResourceData = {
+export type ResourceData = {
   id: number,
   studentUsername: string,
   title: string,

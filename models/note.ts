@@ -217,7 +217,7 @@ type NoteDataToCreate = {
   sessionId: number
 }
 
-type NoteData = {
+export type NoteData = {
   id: number,
   studentUsername: string,
   title: string,

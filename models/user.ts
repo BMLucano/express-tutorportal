@@ -6,6 +6,16 @@ import {
   BadRequestError,
   UnauthorizedError
 } from "../expressError";
+import { studentExists } from "./helpers/dbHelpers";
+
+import { AssignmentData } from "./assignment";
+import AssignmentStudent from "./assignmentStudent";
+import Session from "./session";
+import { SessionData } from "./session";
+import Resource from "./resource";
+import { ResourceData } from "./resource";
+import Note from "./note";
+import { NoteData } from "./note";
 
 /** Functions for user model */
 
@@ -145,30 +155,46 @@ class User {
     return user;
   }
 
-  //TODO: figure out what to do with this function
   /** Given a username, get dashboard data by calling assignment,
    * resource, session, and message models.
-   * @param {string} username
+   * @param {string} studentUsername
+   * @returns {DashboardData} - recent data for student dashboard
+   * @throws {NotFoundError} - if student not found
    *
-   * Returns
   */
 
-  // async getUserDashboard(username) {
-  //   const user = await User.get(username);
-  //   const nextSession = await Session.getNextSession(username);
-  //   const recentAssignments = await Assignment.getAssignmentsByStatus(username, 'assigned');
-  //   const recentResources = await Resource.getRecentResources(username);
-  //   const unreadMessages = await Message.getUnreadMessages(username);
+  static async getUserDashboard(studentUsername: string, limit: number = 3):
+    Promise<DashboardData> {
 
-  //   return {
-  //     user,
-  //     nextSession,
-  //     recentAssignment,
-  //     recentResources,
-  //     unreadMessages,
-  //   };
-  // }
+      if(!(await studentExists(studentUsername)))
+        throw new NotFoundError(`No student with username ${studentUsername}`)
+
+    const user = await User.get(studentUsername);
+    const nextSession = await Session.getSessionsByStudent(studentUsername);
+    const assignments = await AssignmentStudent.getAssignmentsByStatus('assigned', studentUsername);
+    const resources = await Resource.getResourcesByStudent(studentUsername);
+    const notes = await Note.getNotesByStudent(studentUsername);
+    // const unreadMessages = await Message.getUnreadMessages(username);
+
+    return {
+      user,
+      nextSession: nextSession[0],
+      recentAssignments: assignments.slice(0, limit),
+      recentResources: resources.slice(0, limit),
+      recentNotes: notes.slice(0, limit),
+      // unreadMessages,
+    };
+  }
   //TODO: functions for updating data and resetting password?
+}
+
+type DashboardData = {
+  user: UserData,
+  nextSession: SessionData,
+  recentAssignments: AssignmentData[],
+  recentResources: ResourceData[],
+  recentNotes: NoteData[],
+
 }
 
 type UserData = {

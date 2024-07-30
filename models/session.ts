@@ -11,7 +11,7 @@ class Session {
    * @throws {BadRequestError} - if session already in db.
    */
   static async create(data: SessionDataToCreate): Promise<SessionData>{
-const { studentUsername, date, time, duration, notes } = data;
+    const { studentUsername, date, time, duration, notes } = data;
 
     const dupeCheck = await db.query(`
       SELECT id FROM sessions WHERE date = $1 AND time = $2`,
@@ -181,7 +181,7 @@ type SessionDataToCreate = {
   notes?: string,
 }
 
-type SessionData = {
+export type SessionData = {
   id: number,
   studentUsername: string,
   date: string,

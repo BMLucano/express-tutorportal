@@ -170,7 +170,7 @@ type AssignmentDataToUpdate = {
   dueDate?: string | null;
 };
 
-type AssignmentData = {
+export type AssignmentData = {
   id: number;
   title: string;
   description: string;
