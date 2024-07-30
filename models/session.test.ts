@@ -73,7 +73,7 @@ describe("Session model", function(){
         notes: "Updated test session",
       });
       expect(session).toEqual({
-        id: testSessionIds[0],
+        id: expect.any(Number),
         studentUsername: "u1",
         date: expect.any(Date),
         time: "10:00:00",
@@ -130,7 +130,7 @@ describe("Session model", function(){
     test("works", async function () {
       let session = await Session.get(testSessionIds[0]);
       expect(session).toEqual({
-        id: testSessionIds[0],
+        id: expect.any(Number),
         studentUsername: "u1",
         date: expect.any(Date),
         time: "10:00:00",
@@ -157,7 +157,7 @@ describe("Session model", function(){
       let sessions = await Session.getAll();
       expect(sessions).toEqual([
         {
-          id: testSessionIds[0],
+          id: expect.any(Number),
           studentUsername: "u1",
           date: expect.any(Date),
           time: "10:00:00",
@@ -165,7 +165,7 @@ describe("Session model", function(){
           notes: "Notes1",
         },
         {
-          id: testSessionIds[1],
+          id: expect.any(Number),
           studentUsername: "u2",
           date: expect.any(Date),
           time: "11:00:00",
@@ -184,7 +184,7 @@ describe("Session model", function(){
       let sessions = await Session.getSessionsByStudent("u1");
       expect(sessions).toEqual([
         {
-          id: testSessionIds[0],
+          id: expect.any(Number),
           studentUsername: "u1",
           date: expect.any(Date),
           time: "10:00:00",

@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
-import db from '../db.js';
-import { BCRYPT_WORK_FACTOR } from '../config';
+import db from '../../db.js';
+import { BCRYPT_WORK_FACTOR } from '../../config.js';
+import { createToken } from './tokens.js';
 
 const testUserIds: number[] = [];
 const testAssignmentIds: number[] = [];
@@ -16,9 +17,9 @@ async function commonBeforeAll() {
   // Delete data from all tables
   try{
     await db.query('DELETE FROM messages');
-    await db.query('DELETE FROM sessions');
     await db.query('DELETE FROM resources');
     await db.query('DELETE FROM notes');
+    await db.query('DELETE FROM sessions');
     await db.query('DELETE FROM submissions');
     await db.query('DELETE FROM questions');
     await db.query('DELETE FROM assignments_students');
@@ -160,6 +161,10 @@ async function commonAfterAll() {
   await db.end();
 }
 
+// const u1Token = createToken(testUserIds[0], 'student');
+// const u2Token = createToken(testUserIds[0], 'tutor');
+
+
 export {
   commonBeforeAll,
   commonBeforeEach,
@@ -174,4 +179,6 @@ export {
   testSessionIds,
   testMessageIds,
   testAssignmentsStudentsIds,
+  // u1Token,
+  // u2Token
 };

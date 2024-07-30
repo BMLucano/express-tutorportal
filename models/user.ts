@@ -10,12 +10,9 @@ import { studentExists } from "./helpers/dbHelpers";
 
 import { AssignmentData } from "./assignment";
 import AssignmentStudent from "./assignmentStudent";
-import Session from "./session";
-import { SessionData } from "./session";
-import Resource from "./resource";
-import { ResourceData } from "./resource";
-import Note from "./note";
-import { NoteData } from "./note";
+import Session, { SessionData }from "./session";
+import Resource, { ResourceData } from "./resource";
+import Note, {NoteData} from "./note";
 
 /** Functions for user model */
 
@@ -61,16 +58,9 @@ class User {
   /**
    * Register a user with new data.
    *
-   * @param {string} username
-   * @param {string} password
-   * @param {string} firstName
-   * @param {string} lastName
-   * @param {string} email
-   * @param {string} role
-   *
+   * @param {RegisterUserData} - data necessary to register a new user
    * @returns {UserData} - Created user data
-   *
-   * @throws BadRequestError - for duplicates
+   * @throws {BadRequestError} - for duplicates
    */
   static async register(
     { username, password, firstName, lastName, email,role}: RegisterUserData):
@@ -171,7 +161,8 @@ class User {
 
     const user = await User.get(studentUsername);
     const nextSession = await Session.getSessionsByStudent(studentUsername);
-    const assignments = await AssignmentStudent.getAssignmentsByStatus('assigned', studentUsername);
+    const assignments = await AssignmentStudent.getAssignmentsByStatus('assigned',
+      studentUsername);
     const resources = await Resource.getResourcesByStudent(studentUsername);
     const notes = await Note.getNotesByStudent(studentUsername);
     // const unreadMessages = await Message.getUnreadMessages(username);
