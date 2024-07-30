@@ -1,4 +1,4 @@
-import { describe, test, it, expect } from "vitest";
+import { describe, test, expect } from "vitest";
 import {
     NotFoundError,
     BadRequestError,
@@ -15,15 +15,6 @@ import {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
-  testUserIds,
-  testAssignmentIds,
-  testQuestionIds,
-  testSubmissionIds,
-  testNoteIds,
-  testResourceIds,
-  testSessionIds,
-  testMessageIds,
-  testAssignmentsStudentsIds,
 } from "./_testCommon";
 
 beforeAll(commonBeforeAll);
@@ -177,4 +168,41 @@ describe("get", function () {
   });
 });
 
-//TODO: tests for getUserDashboard, update, resetPassword
+/************ get dashboard data */
+
+describe("getUserDashboard", function () {
+  test("works", async function () {
+    const dashboardData = await User.getUserDashboard("u1");
+    expect(dashboardData).toEqual({
+      user: {
+        username: "u1",
+        firstName: "U1F",
+        lastName: "U1L",
+        email: "u1@email.com",
+        role: "student",
+      },
+      nextSession: expect.any(Object),
+      recentAssignments: expect.any(Array),
+      recentResources: expect.any(Array),
+      recentNotes: expect.any(Array),
+    });
+  });
+
+  test("not found if no such user", async function () {
+    try {
+      await User.getUserDashboard("nope");
+      throw new Error("fail test, you shouldn't get here");
+    } catch (err) {
+      expect(err instanceof NotFoundError).toBeTruthy();
+    }
+  });
+
+  test("limit works", async function () {
+    const dashboardData = await User.getUserDashboard("u1", 1);
+    expect(dashboardData.recentAssignments.length).toEqual(1);
+    expect(dashboardData.recentResources.length).toEqual(1);
+    expect(dashboardData.recentNotes.length).toEqual(1);
+  });
+});
+
+//TODO: tests for  update, resetPassword
