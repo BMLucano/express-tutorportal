@@ -20,4 +20,4 @@ function createToken(username: string, role: string): string{
 //   role: string;
 // };
 
-export default createToken;
+export {createToken};

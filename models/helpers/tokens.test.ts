@@ -1,7 +1,7 @@
 import { describe, test, it, expect } from "vitest";
 
 import jwt from "jsonwebtoken";
-import createToken from "./tokens";
+import { createToken } from "./tokens";
 import { SECRET_KEY } from "../../config";
 
 describe("createToken", function() {
