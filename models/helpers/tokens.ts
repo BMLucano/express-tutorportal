@@ -10,6 +10,11 @@ import { SECRET_KEY } from "../../config";
 
 function createToken(username: string, role: string): string{
 
+  let payload = {
+    username: username,
+    role: role,
+  }
+  return jwt.sign(payload, SECRET_KEY);
 }
 
 // type UserData = {

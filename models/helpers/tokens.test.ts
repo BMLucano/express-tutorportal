@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { createToken } from "./tokens";
 import { SECRET_KEY } from "../../config";
 
-describe.skip("createToken", function() {
+describe("createToken", function() {
   test("works: student", function () {
     const token = createToken( "u1", "student");
     const payload = jwt.verify(token, SECRET_KEY);
@@ -24,4 +24,8 @@ describe.skip("createToken", function() {
       role: "tutor",
     });
   });
+
+  // test("works: default no role", function() {
+  //   const token = createToken("u1")
+  // })
 })
