@@ -4,7 +4,7 @@ import express from "express";
 const router = express.Router();
 
 
-/** POST /auth/register: { username, password } => { token }
+/** POST /auth/token: { username, password } => { token }
  *
  * Returns JWT token which can be used to authenticate further requests.
  *
