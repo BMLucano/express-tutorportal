@@ -16,6 +16,8 @@ const testAssignmentsStudentsIds: number[] = [];
 async function commonBeforeAll() {
   // Delete data from all tables
   try{
+    console.log("Running commonBeforeAll...");
+
     await db.query('DELETE FROM messages');
     await db.query('DELETE FROM resources');
     await db.query('DELETE FROM notes');
@@ -26,6 +28,7 @@ async function commonBeforeAll() {
     await db.query('DELETE FROM assignments');
     await db.query('DELETE FROM users');
 
+    console.log("Data reset complete");
     // console.log('testAssignmentIds from commonBeforeAll', testAssignmentIds)
   }catch(err){
     console.error("Error in commonBeforeAll", err)
@@ -150,15 +153,21 @@ async function commonBeforeAll() {
 }
 
 async function commonBeforeEach() {
+  console.log("Running commonBeforeEach...");
   await db.query('BEGIN');
+  console.log("Transaction begun");
 }
 
 async function commonAfterEach() {
+  console.log("Running commonAfterEach...");
   await db.query('ROLLBACK');
+  console.log("Transaction rolled back");
 }
 
 async function commonAfterAll() {
+  console.log("Running commonAfterAll...");
   await db.end();
+  console.log("Database connection closed");
 }
 
 // const u1Token = createToken(testUserIds[0], 'student');

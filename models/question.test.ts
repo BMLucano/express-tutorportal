@@ -15,10 +15,22 @@ import {
   testQuestionIds
 } from "./helpers/_testCommon";
 
-beforeAll(commonBeforeAll);
-beforeEach(commonBeforeEach);
-afterEach(commonAfterEach);
-afterAll(commonAfterAll);
+beforeEach(async () => {
+  await commonBeforeEach();
+});
+
+beforeAll(async () => {
+  await commonBeforeAll();
+});
+
+
+afterEach(async () => {
+  await commonAfterEach();
+});
+
+afterAll(async () => {
+  await commonAfterAll();
+});
 
 describe("Question model", function(){
 

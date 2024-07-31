@@ -1,4 +1,4 @@
-import { describe, test, expect } from "vitest";
+import { describe, test, expect, afterAll, afterEach, beforeAll, beforeEach } from "vitest";
 import {
     NotFoundError,
     BadRequestError,
@@ -7,8 +7,6 @@ import {
 
 import db from "../db";
 import User from "./user";
-import { afterAll, beforeAll } from "vitest";
-import { afterEach, beforeEach } from "vitest";
 
 import {
   commonBeforeAll,
@@ -17,10 +15,22 @@ import {
   commonAfterAll,
 } from "./helpers/_testCommon";
 
-beforeAll(commonBeforeAll);
-beforeEach(commonBeforeEach);
-afterEach(commonAfterEach);
-afterAll(commonAfterAll);
+beforeEach(async () => {
+  await commonBeforeEach();
+});
+
+beforeAll(async () => {
+  await commonBeforeAll();
+});
+
+
+afterEach(async () => {
+  await commonAfterEach();
+});
+
+afterAll(async () => {
+  await commonAfterAll();
+});
 
 describe("User model", function(){
   /************ auth */

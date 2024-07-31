@@ -7,9 +7,9 @@
   "scripts": {
     "start": "node build/server.js",
     "start:debug": "node --inspect-brk $npm_package_main",
-    "test": "vitest ts",
-    "test:file": "vitest $1",
-    "test:cov": "vitest ts --coverage",
+    "test": "vitest ts --pool forks --poolOptions.forks.singleFork",
+    "test:file": "vitest $1 --pool forks --poolOptions.forks.singleFork",
+    "test:cov": "vitest ts --coverage --pool forks --poolOptions.forks.singleFork",
     "test:debug": "vitest -t *.ts --run --inspect-brk --no-file-parallelism"
   },
   "devDependencies": {
