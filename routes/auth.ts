@@ -1,7 +1,13 @@
 /** Routes for authentication. */
-import express from "express";
+import express, { NextFunction, Request, Response, Router } from "express";
+const router: Router = express.Router();
+import { z } from "zod";
 
-const router = express.Router();
+import { BadRequestError } from "../expressError";
+import User from "../models/user";
+import { createToken } from "../models/helpers/tokens";
+import { userRegisterSchema, userAuthSchema } from "../schemas/users";
+import { create } from "domain";
 
 
 /** POST /auth/token: { username, password } => { token }
@@ -10,6 +16,25 @@ const router = express.Router();
  *
  * Authorization req: none
 */
+router.post("/token", async function(req: Request, res: Response,
+    next: NextFunction): Promise<Response | void> {
+
+      try{
+        const user = userRegisterSchema.parse(req.body);
+        const{ username, password } = req.body;
+        const newUser = await User.authenticate(username, password);
+
+        const token = createToken(username, newUser.role);
+        return res.status(200).json({ token })
+
+      }catch(error){
+        if(error instanceof z.ZodError){
+          const errs = error.issues.map((issue) => issue.message).join(", ");
+          return next(new BadRequestError(errs));
+        }
+        return next(error)
+      }
+})
 
 /** POST auth/register: { user } => { token }
  *
