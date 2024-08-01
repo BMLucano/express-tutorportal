@@ -83,7 +83,7 @@ describe("Auth routes", function(){
   })
 
   /********** auth/register */
-  describe.skip("auth/register", function(){
+  describe("auth/register", function(){
 
     test("works for anon", async function () {
       const resp = await request(app)

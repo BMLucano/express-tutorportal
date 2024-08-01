@@ -21,9 +21,9 @@ router.post("/token", async function(req: Request, res: Response,
 
       try{
         const { username, password } = userAuthSchema.parse(req.body);
-        const newUser = await User.authenticate(username, password);
+        const user = await User.authenticate(username, password);
 
-        const token = createToken(username, newUser.role);
+        const token = createToken(username, user.role);
         return res.status(200).json({ token })
 
       }catch(error){
@@ -33,7 +33,7 @@ router.post("/token", async function(req: Request, res: Response,
         }
         return next(error)
       }
-})
+});
 
 /** POST auth/register: { user } => { token }
  *
@@ -44,5 +44,23 @@ router.post("/token", async function(req: Request, res: Response,
  * Authorization required: none
  *
  */
+router.post("/register", async function(req: Request, res: Response,
+  next: NextFunction): Promise<Response | void> {
+
+    try{
+      const userData = userRegisterSchema.parse(req.body);
+      const newUser = await User.register(userData);
+
+      const token = createToken(newUser.username, newUser.role);
+      return res.status(201).json({ token });
+
+    }catch(error){
+      if(error instanceof z.ZodError){
+        const errs = error.issues.map((issue) => issue.message).join(", ");
+        return next(new BadRequestError(errs));
+      }
+      return next(error);
+    }
+  });
 
 export default router;
