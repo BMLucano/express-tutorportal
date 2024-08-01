@@ -20,8 +20,7 @@ router.post("/token", async function(req: Request, res: Response,
     next: NextFunction): Promise<Response | void> {
 
       try{
-        const user = userRegisterSchema.parse(req.body);
-        const{ username, password } = req.body;
+        const { username, password } = userAuthSchema.parse(req.body);
         const newUser = await User.authenticate(username, password);
 
         const token = createToken(username, newUser.role);
