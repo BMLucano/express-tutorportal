@@ -1,10 +1,17 @@
+
 {
-    "compilerOptions": {
-        "target": "ES2021",
-        "strict": true,
-        "skipLibCheck": true,
-        "moduleResolution": "Node",
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true
-    },
-}
+"compilerOptions": {
+    "target": "ES2021",                       // Keep the target as ES2021
+    "module": "ES6",                          // Use ES6 module syntax
+    "moduleResolution": "node",               // Resolve modules using Node.js resolution
+    "outDir": "./build",                      // Output directory for compiled files
+    "rootDir": "./src",                       // Root directory of your TypeScript source files
+    "strict": true,                           // Enable strict type-checking options
+    "esModuleInterop": true,                  // Enable compatibility with CommonJS modules
+    "skipLibCheck": true,                     // Skip type checking of declaration files
+    "allowSyntheticDefaultImports": true,     // Allow synthetic default imports
+    "forceConsistentCasingInFileNames": true  // Disallow inconsistently-cased references to the same file
+},
+"include": ["src/**/*"],                    // Include all TypeScript files in the src directory
+"exclude": ["node_modules"]                 // Exclude the node_modules directory
+  }
