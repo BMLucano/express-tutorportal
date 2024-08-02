@@ -2,12 +2,13 @@
 
 /** Database setup for tutorportal. */
 
-import { Client } from "pg";
+// import { Client } from "pg";
+import pg from "pg";
 import { getDatabaseUri } from "./config";
 
 const databaseUri: string = getDatabaseUri();
 
-const db: Client = new Client({
+const db = new pg.Client({
   connectionString: databaseUri,
 });
 

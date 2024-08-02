@@ -19,6 +19,10 @@ export default {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.html$/,
+        use: 'html-loader',
+      },
     ],
   },
   resolve: {
@@ -33,7 +37,14 @@ export default {
   experiments: {
     outputModule: true,
   },
-  externals: [webpackNodeExternals()],
+  externals: [
+    'bcrypt',
+    'dotenv',
+    'express',
+    'jsonwebtoken',
+    'pg',
+    'zod',
+    'node:process',],
   plugins: [
     new webpack.IgnorePlugin({
       resourceRegExp: /^(node-gyp|npm|mock-aws-s3|aws-sdk|nock)$/,
@@ -45,3 +56,4 @@ export default {
 //   const nodeExternals = require('webpack-node-externals');
 //   return nodeExternals();
 // }
+// webpackNodeExternals()
