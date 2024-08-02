@@ -17,6 +17,7 @@ app.use("/auth", authRoutes);
 //   return res.send(`2 + 3 = ${add(2, 3)}`);
 // });
 
+
 /** Handle 404 errors -- this matches everything */
 app.use(function (req: Request, res: Response, next: NextFunction) {
   throw new NotFoundError();
