@@ -26,3 +26,9 @@ function studentAuth(req: Request, res: Response, next: NextFunction){
 function tutorAuth(req: Request, res: Response, next: NextFunction){
 
 }
+
+export {
+  jwtAuth,
+  studentAuth,
+  tutorAuth
+}
