@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    setupFiles: './models/helpers/_testCommon.ts', // Ensure the path is correct
+    setupFiles: './src/models/helpers/_testCommon.ts', // Ensure the path is correct
     // singleThread: true,
     maxConcurrency: 1,
   },
