@@ -15,7 +15,8 @@ interface Req extends Request {
  * Error if not a valid token or no header provided.
  */
 function jwtAuth(req: Req, res: Response, next: NextFunction){
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers?.authorization;
+  console.log("res", res)
 
   if (!authHeader) {
     return res.status(401).send('Unauthorized');
