@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET_KEY } from "../config";
+import { UnauthorizedError } from "../expressError";
 
 interface Req extends Request {
   headers: {
@@ -19,7 +20,7 @@ function jwtAuth(req: Req, res: Response, next: NextFunction){
   console.log("res", res)
 
   if (!authHeader) {
-    return res.status(401).send('Unauthorized');
+    throw new UnauthorizedError("Unauthorized");
   }
 
   const token = authHeader.replace(/^[Bb]earer\s+/, "").trim();
@@ -29,7 +30,7 @@ function jwtAuth(req: Req, res: Response, next: NextFunction){
     return next();
   } catch (err) {
     console.error('JWT verification failed:', err);
-    return res.status(401).send('Unauthorized');
+    throw new UnauthorizedError("Unauthorized");
   }
 }
 
@@ -46,7 +47,12 @@ function studentAuth(req: Request, res: Response, next: NextFunction){
  */
 
 function tutorAuth(req: Request, res: Response, next: NextFunction){
-
+  console.log("req and res", req, res)
+  if (res.locals.role === 'tutor') {
+    return next();
+  } else {
+    res.status(403).send('Forbidden');
+  }
 }
 
 export {

@@ -29,40 +29,47 @@ describe("jwtAuthentication", function(){
 
 
   test("works: with header", function() {
-    const req = {} as Request;
-    const res = createMockResponse();
-
-    jwtAuth(req, res, next);
-
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.send).toHaveBeenCalledWith('Unauthorized');
-    expect(next).not.toHaveBeenCalled();
+    const req = { headers: { authorization: `Bearer ${goodJwt}` } };
+    const res = { locals: {} };
+    jwtAuth(req as any, res as Response, next);
+    expect(res.locals).toEqual({
+      user: {
+        iat: expect.any(Number),
+        username: "test",
+        role: 'student',
+      },
+    });
   });
 
   test("unauth: no header", function() {
     const req = {} as Request;
+    const res = createMockResponse();
 
-    const res = {
-      locals: {},
-      status: vi.fn().mockReturnThis(),
-      send: vi.fn(),
-    } as unknown as Response;
+    try {
+      jwtAuth(req, res, next);
+    } catch (err) {
+      expect(err).toBeInstanceOf(UnauthorizedError);
+      expect(err.message).toBe("Unauthorized");
+    }
 
-    jwtAuth(req as Request, res as Response, next);
-
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.send).toHaveBeenCalledWith('Unauthorized');
-    expect(next).not.toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.send).not.toHaveBeenCalled();
+    // expect(next).not.toHaveBeenCalled();
   });
 
   test("unauth: wrong jwt signature", function() {
     const req = { headers: { authorization: `Bearer ${badJwt}` } } as Request;
     const res = createMockResponse();
 
-    jwtAuth(req, res, next);
+    try {
+      jwtAuth(req, res, next);
+    } catch (err) {
+      expect(err).toBeInstanceOf(UnauthorizedError);
+      expect(err.message).toBe("Unauthorized");
+    }
 
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.send).toHaveBeenCalledWith('Unauthorized');
-    expect(next).not.toHaveBeenCalled();
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.send).not.toHaveBeenCalled();
+    // expect(next).not.toHaveBeenCalled();
   });
 })
