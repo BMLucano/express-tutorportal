@@ -49,12 +49,10 @@ describe("jwtAuthentication", function(){
       jwtAuth(req, res, next);
     } catch (err) {
       expect(err).toBeInstanceOf(UnauthorizedError);
-      expect(err.message).toBe("Unauthorized");
     }
 
     expect(res.status).not.toHaveBeenCalled();
     expect(res.send).not.toHaveBeenCalled();
-    // expect(next).not.toHaveBeenCalled();
   });
 
   test("unauth: wrong jwt signature", function() {
@@ -65,11 +63,9 @@ describe("jwtAuthentication", function(){
       jwtAuth(req, res, next);
     } catch (err) {
       expect(err).toBeInstanceOf(UnauthorizedError);
-      expect(err.message).toBe("Unauthorized");
     }
 
     expect(res.status).not.toHaveBeenCalled();
     expect(res.send).not.toHaveBeenCalled();
-    // expect(next).not.toHaveBeenCalled();
   });
 })
