@@ -5,10 +5,11 @@ import jest from 'jest';
 import { UnauthorizedError } from "../expressError";
 
 import { jwtAuth, studentAuth, tutorAuth } from "./auth";
+import { testUserIds } from "../models/helpers/_testCommon";
 
 import { SECRET_KEY } from "../config";
-const goodJwt = jwt.sign({ username: "test", role: 'student' }, SECRET_KEY);
-const badJwt = jwt.sign({ username: "test", isAdmin: 'student' }, "wrong");
+const goodJwt = jwt.sign({ username: testUserIds[0], role: 'student' }, SECRET_KEY);
+const badJwt = jwt.sign({ username: testUserIds[1], role: 'student' }, "wrong");
 
 
 function createMockResponse(): Response {
@@ -22,50 +23,99 @@ function createMockResponse(): Response {
 // function next(err?: Error | string) {
 //   if (err) throw new Error("Got error from middleware");
 // }
-
-describe("jwtAuthentication", function(){
-    //type casting
+describe("auth middleware", function(){
+  //type casting
   const next: NextFunction = vi.fn() as unknown as NextFunction;
 
+  describe("jwtAuthentication", function(){
 
-  test("works: with header", function() {
-    const req = { headers: { authorization: `Bearer ${goodJwt}` } };
-    const res = { locals: {} };
-    jwtAuth(req as any, res as Response, next);
-    expect(res.locals).toEqual({
-      user: {
-        iat: expect.any(Number),
-        username: "test",
-        role: 'student',
-      },
+    test("works: with header", function() {
+      const req = { headers: { authorization: `Bearer ${goodJwt}` } };
+      const res = { locals: {} };
+      jwtAuth(req as any, res as Response, next);
+      expect(res.locals).toEqual({
+        user: {
+          iat: expect.any(Number),
+          username: testUserIds[0],
+          role: 'student',
+        },
+      });
+      expect(next).toHaveBeenCalled();
     });
+
+    test("unauth: no header", function() {
+      const req = {} as Request;
+      const res = createMockResponse();
+
+      try {
+        jwtAuth(req, res, next);
+      } catch (err) {
+        expect(err).toBeInstanceOf(UnauthorizedError);
+      }
+
+      expect(res.status).not.toHaveBeenCalled();
+      expect(res.send).not.toHaveBeenCalled();
+    });
+
+    test("unauth: wrong jwt signature", function() {
+      const req = { headers: { authorization: `Bearer ${badJwt}` } } as Request;
+      const res = createMockResponse();
+
+      try {
+        jwtAuth(req, res, next);
+      } catch (err) {
+        expect(err).toBeInstanceOf(UnauthorizedError);
+      }
+
+      expect(res.status).not.toHaveBeenCalled();
+      expect(res.send).not.toHaveBeenCalled();
+    });
+  })
+
+  describe("studentAuth", function(){
+      test("works", function(){
+        const req = {} as Request;
+        const res = createMockResponse();
+        res.locals.user = { role: 'student'};
+
+        studentAuth(req, res, next);
+        expect(next).toHaveBeenCalled();
+      });
+
+      test("unauth: not a student", function(){
+        const req = {} as Request;
+        const res = createMockResponse();
+        res.locals.user = { role: 'tutor'};
+
+        try{
+          studentAuth(req, res, next);
+        }catch(err){
+          expect(err).toBeInstanceOf(UnauthorizedError)
+        }
+      });
   });
 
-  test("unauth: no header", function() {
-    const req = {} as Request;
-    const res = createMockResponse();
+  describe("tutorAuth", function(){
+    test("works", function(){
+      const req = {} as Request;
+      const res = createMockResponse();
+      res.locals.user = { role: 'tutor'};
 
-    try {
-      jwtAuth(req, res, next);
-    } catch (err) {
-      expect(err).toBeInstanceOf(UnauthorizedError);
-    }
+      tutorAuth(req, res, next);
+      expect(next).toHaveBeenCalled();
+    });
 
-    expect(res.status).not.toHaveBeenCalled();
-    expect(res.send).not.toHaveBeenCalled();
-  });
+    test("unauth: not a tutor", function(){
+      const req = {} as Request;
+      const res = createMockResponse();
+      res.locals.user = { role: 'student'};
 
-  test("unauth: wrong jwt signature", function() {
-    const req = { headers: { authorization: `Bearer ${badJwt}` } } as Request;
-    const res = createMockResponse();
+      try{
+        tutorAuth(req, res, next);
+      }catch(err){
+        expect(err).toBeInstanceOf(UnauthorizedError)
+      }
+    });
+});
 
-    try {
-      jwtAuth(req, res, next);
-    } catch (err) {
-      expect(err).toBeInstanceOf(UnauthorizedError);
-    }
-
-    expect(res.status).not.toHaveBeenCalled();
-    expect(res.send).not.toHaveBeenCalled();
-  });
 })

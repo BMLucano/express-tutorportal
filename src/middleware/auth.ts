@@ -30,7 +30,7 @@ function jwtAuth(req: Req, res: Response, next: NextFunction){
     return next();
   } catch (err) {
     console.error('JWT verification failed:', err);
-    throw new UnauthorizedError("Unauthorized");
+    throw new UnauthorizedError();
   }
 }
 
@@ -39,7 +39,8 @@ function jwtAuth(req: Req, res: Response, next: NextFunction){
  */
 
 function studentAuth(req: Request, res: Response, next: NextFunction){
-
+  if(res.locals.user.role === 'student') return next();
+  throw new UnauthorizedError();
 }
 
 /**
@@ -48,11 +49,8 @@ function studentAuth(req: Request, res: Response, next: NextFunction){
 
 function tutorAuth(req: Request, res: Response, next: NextFunction){
   console.log("req and res", req, res)
-  if (res.locals.role === 'tutor') {
-    return next();
-  } else {
-    res.status(403).send('Forbidden');
-  }
+  if (res.locals.user.role === 'tutor') return next();
+  throw new UnauthorizedError();
 }
 
 export {
