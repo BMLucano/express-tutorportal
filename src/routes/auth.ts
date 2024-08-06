@@ -18,10 +18,11 @@ import { create } from "domain";
 */
 router.post("/token", async function(req: Request, res: Response,
     next: NextFunction): Promise<Response | void> {
-
+      console.log("req body", req.body)
       try{
         const { username, password } = userAuthSchema.parse(req.body);
         const user = await User.authenticate(username, password);
+        console.log("user", user)
 
         const token = createToken(username, user.role);
         return res.status(200).json({ token })
