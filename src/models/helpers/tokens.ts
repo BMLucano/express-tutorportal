@@ -14,6 +14,7 @@ function createToken(username: string, role: string): string{
     username: username,
     role: role,
   }
+  console.log("payload in createToken", payload)
   return jwt.sign(payload, SECRET_KEY);
 }
 

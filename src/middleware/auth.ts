@@ -17,7 +17,6 @@ interface Req extends Request {
  */
 function jwtAuth(req: Req, res: Response, next: NextFunction){
   const authHeader = req.headers?.authorization;
-  console.log("res", res)
 
   if (!authHeader) {
     throw new UnauthorizedError("Unauthorized");
@@ -27,6 +26,7 @@ function jwtAuth(req: Req, res: Response, next: NextFunction){
 
   try {
     res.locals.user = jwt.verify(token, SECRET_KEY);
+    console.log("jwtAuth res.local.user", res.locals.user)
     return next();
   } catch (err) {
     console.error('JWT verification failed:', err);

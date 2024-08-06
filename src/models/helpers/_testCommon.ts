@@ -3,7 +3,7 @@ import db from '../../db';
 import { BCRYPT_WORK_FACTOR } from '../../config';
 import { createToken } from './tokens.js';
 
-const testUserIds: number[] = [];
+const testUserIds: string[] = [];
 const testAssignmentIds: number[] = [];
 const testQuestionIds: number[] = [];
 const testSubmissionIds: number[] = [];
@@ -170,8 +170,8 @@ async function commonAfterAll() {
   console.log("Database connection closed");
 }
 
-// const u1Token = createToken(testUserIds[0], 'student');
-// const u2Token = createToken(testUserIds[0], 'tutor');
+const studentToken = createToken("u1", 'student');
+const tutorToken = createToken("u2", 'tutor');
 
 
 export {
@@ -188,6 +188,6 @@ export {
   testSessionIds,
   testMessageIds,
   testAssignmentsStudentsIds,
-  // u1Token,
-  // u2Token
+  studentToken,
+  tutorToken
 };

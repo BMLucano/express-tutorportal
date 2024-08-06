@@ -5,10 +5,13 @@ import {ExpressError, NotFoundError } from "./expressError";
 
 //TODO: finish importing routes
 import authRoutes from "./routes/auth"
+import { jwtAuth, studentAuth } from "./middleware/auth";
+import User from "./models/user";
 // import { add } from "./add.js";
 
 const app: Application = express();
 app.use(express.json());
+app.use(jwtAuth);
 
 app.use("/auth", authRoutes);
 
@@ -16,6 +19,14 @@ app.use("/auth", authRoutes);
 // app.get("/", function (req: Request, res: Response) {
 //   return res.send(`2 + 3 = ${add(2, 3)}`);
 // });
+app.get('/dashboard', studentAuth, async function(req: Request, res: Response,
+    next: NextFunction){
+
+      const username = res.locals.user.username;
+      const dashboardData = await User.getUserDashboard(username);
+
+      return res.json( dashboardData )
+})
 
 
 /** Handle 404 errors -- this matches everything */

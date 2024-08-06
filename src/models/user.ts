@@ -166,6 +166,7 @@ class User {
     const resources = await Resource.getResourcesByStudent(studentUsername);
     const notes = await Note.getNotesByStudent(studentUsername);
     // const unreadMessages = await Message.getUnreadMessages(username);
+    console.log("user from model", user)
 
     return {
       user,
