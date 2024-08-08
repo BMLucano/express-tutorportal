@@ -3,6 +3,7 @@ const router: Router = express.Router();
 
 import { studentAuth, tutorAuth } from "../middleware/auth";
 import Note, { NoteData } from "../models/note";
+import { createNoteSchema, updateNoteSchema } from "../schemas/notes";
 
 /*** Routes for handling note retrieveal, creation, updating, and deleting*/
 
@@ -16,6 +17,8 @@ import Note, { NoteData } from "../models/note";
 router.get('/', async function(req: Request, res: Response,
   next: NextFunction){
 
+    const notes = await Note.getAll();
+    return res.json(notes);
 })
 
 

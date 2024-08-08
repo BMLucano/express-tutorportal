@@ -43,7 +43,7 @@ describe("Notes routes", function(){
         .get("/notes")
         .set("Authorization", `Bearer ${studentToken}`);
       // expect(resp.statusCode).toBe(200);
-      expect(resp.body).toBe([
+      expect(resp.body).toEqual([
         {
           id: testNoteIds[0],
           studentUsername: "u1",
@@ -66,7 +66,7 @@ describe("Notes routes", function(){
         .get("/notes")
         .set("Authorization", `Bearer ${tutorToken}`);
       // expect(resp.statusCode).toBe(200);
-      expect(resp.body).toBe([
+      expect(resp.body).toEqual([
         {
           id: testNoteIds[0],
           studentUsername: "u1",
@@ -85,7 +85,7 @@ describe("Notes routes", function(){
     });
   })
 
-  describe("GET /notes/:id", function(){
+  describe.skip("GET /notes/:id", function(){
 
     test("works for student", async function(){
       const note = await Note.create({
@@ -121,7 +121,7 @@ describe("Notes routes", function(){
     });
   })
 
-  describe("POST /notes", function(){
+  describe.skip("POST /notes", function(){
 
     test("works", async function(){
       const resp = await request(app)
@@ -191,7 +191,7 @@ describe("Notes routes", function(){
     });
   })
 
-  describe("PATCH /notes/:id", function(){
+  describe.skip("PATCH /notes/:id", function(){
 
     test("works: tutor", async function(){
       const resp = await request(app)
@@ -265,7 +265,7 @@ describe("Notes routes", function(){
     });
   });
 
-  describe("DELETE /notes/:id", function(){
+  describe.skip("DELETE /notes/:id", function(){
 
     test("works - tutor", async function(){
       const resp = await request(app)

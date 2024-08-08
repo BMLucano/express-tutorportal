@@ -5,7 +5,8 @@ import {ExpressError, NotFoundError } from "./expressError";
 
 //TODO: finish importing routes
 import authRoutes from "./routes/auth";
-import dashboardRoutes from "./routes/dashboard"
+import dashboardRoutes from "./routes/dashboard";
+import noteRoutes from "./routes/notes";
 
 import { jwtAuth } from "./middleware/auth";
 // import { add } from "./add.js";
@@ -16,6 +17,7 @@ app.use(jwtAuth);
 
 app.use("/dashboard", dashboardRoutes)
 app.use("/auth", authRoutes);
+app.use("/notes", noteRoutes);
 
 /** Sample route */
 // app.get("/", function (req: Request, res: Response) {
