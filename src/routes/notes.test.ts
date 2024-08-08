@@ -83,6 +83,12 @@ describe("Notes routes", function(){
         },
       ])
     });
+
+    test("unauth for anon", async function(){
+      const resp = await request(app)
+        .get("/notes");
+      expect(resp.statusCode).toEqual(401)
+    })
   })
 
   describe.skip("GET /notes/:id", function(){

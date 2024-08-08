@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response, Router } from "express";
 const router: Router = express.Router();
 
-import { studentAuth, tutorAuth } from "../middleware/auth";
+import { studentAuth, tutorAuth, ensureUser } from "../middleware/auth";
 import Note, { NoteData } from "../models/note";
 import { createNoteSchema, updateNoteSchema } from "../schemas/notes";
 
@@ -14,7 +14,7 @@ import { createNoteSchema, updateNoteSchema } from "../schemas/notes";
  *
  * @returns {NoteData[]}
  */
-router.get('/', async function(req: Request, res: Response,
+router.get('/', ensureUser, async function(req: Request, res: Response,
   next: NextFunction){
 
     const notes = await Note.getAll();
