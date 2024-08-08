@@ -2,29 +2,29 @@ import request from "supertest";
 import { describe, test, expect, afterAll, afterEach, beforeAll, beforeEach } from "vitest";
 import app from "../app";
 
-// import {
-//   commonBeforeAll,
-//   commonAfterAll,
-//   commonAfterEach,
-//   commonBeforeEach }
-//   from  "../models/helpers/_testCommon";
+import {
+  commonBeforeAll,
+  commonAfterAll,
+  commonAfterEach,
+  commonBeforeEach }
+  from  "../models/helpers/_testCommon";
 
-// beforeEach(async () => {
-//   await commonBeforeEach();
-// });
+beforeEach(async () => {
+  await commonBeforeEach();
+});
 
-// beforeAll(async () => {
-//   await commonBeforeAll();
-// });
+beforeAll(async () => {
+  await commonBeforeAll();
+});
 
 
-// afterEach(async () => {
-//   await commonAfterEach();
-// });
+afterEach(async () => {
+  await commonAfterEach();
+});
 
-// afterAll(async () => {
-//   await commonAfterAll();
-// });
+afterAll(async () => {
+  await commonAfterAll();
+});
 
 describe("Auth routes", function(){
 

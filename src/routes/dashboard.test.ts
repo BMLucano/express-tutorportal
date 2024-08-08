@@ -14,8 +14,6 @@ import {
   commonAfterAll,
   testAssignmentIds,
   testUserIds,
-  studentToken,
-  tutorToken
 } from "../models/helpers/_testCommon";
 
 beforeEach(async () => {
@@ -37,9 +35,9 @@ afterAll(async () => {
 
 
 // console.log("testUserids", testUserIds)
-// const studentToken = createToken("u1", 'student');
-// const tutorToken = createToken("u2", 'tutor');
-const notValidUserToken = createToken("u3", 'student')
+const studentToken = createToken("u1", 'student');
+const tutorToken = createToken("u2", 'tutor');
+// const notValidUserToken = createToken("u3", 'student')
 
 describe("GET dashboard", function() {
 

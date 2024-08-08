@@ -170,8 +170,8 @@ async function commonAfterAll() {
   console.log("Database connection closed");
 }
 
-const studentToken = createToken("u1", 'student');
-const tutorToken = createToken("u2", 'tutor');
+// const studentToken = createToken("u1", 'student');
+// const tutorToken = createToken("u2", 'tutor');
 
 
 export {
@@ -188,6 +188,6 @@ export {
   testSessionIds,
   testMessageIds,
   testAssignmentsStudentsIds,
-  studentToken,
-  tutorToken
+  // studentToken,
+  // tutorToken
 };
