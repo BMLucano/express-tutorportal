@@ -49,8 +49,24 @@ function tutorAuth(req: Request, res: Response, next: NextFunction){
   throw new UnauthorizedError();
 }
 
+function ensureUser(req: Request, res: Response, next: NextFunction){
+
+  //first check if role exists on res.local.user (if not caught here, will throw 500 err)
+  if (!res.locals.user) {
+    throw new UnauthorizedError();
+  }
+
+  if (res.locals.user.role === 'tutor' || res.locals.user.role === 'student'){
+   return next();
+  }
+
+  throw new UnauthorizedError();
+
+}
+
 export {
   jwtAuth,
   studentAuth,
-  tutorAuth
+  tutorAuth,
+  ensureUser
 }
