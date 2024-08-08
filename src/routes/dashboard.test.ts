@@ -44,7 +44,7 @@ describe("GET dashboard", function() {
   test("works", async function(){
     const resp = await request(app)
       .get('/dashboard')
-      .set("authorization", `Bearer ${studentToken}`);;
+      .set("authorization", `Bearer ${studentToken}`);
     expect(resp.body).toEqual({
       user: {
         username: "u1",
