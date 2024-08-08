@@ -91,7 +91,7 @@ describe("Notes routes", function(){
     })
   })
 
-  describe.skip("GET /notes/:id", function(){
+  describe("GET /notes/:id", function(){
 
     test("works for student", async function(){
       const note = await Note.create({
@@ -106,7 +106,7 @@ describe("Notes routes", function(){
       expect(resp.body).toEqual({...note, id: note.id});
     });
 
-    test("works for student", async function(){
+    test("works for tutor", async function(){
       const note = await Note.create({
         studentUsername: "u1",
         title: "New title",
@@ -121,7 +121,7 @@ describe("Notes routes", function(){
 
     test("Not found", async function(){
       const resp = await request(app)
-        .get("notes/375347958439")
+        .get("/notes/37534")
         .set("Authorization", `Bearer ${studentToken}`);
       expect(resp.statusCode).toEqual(404);
     });

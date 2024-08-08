@@ -29,9 +29,11 @@ router.get('/', ensureUser, async function(req: Request, res: Response,
  *
  * @returns {NoteData}
  */
-router.get("/:id", async function(req: Request, res: Response,
+router.get("/:id", ensureUser, async function(req: Request, res: Response,
   next: NextFunction){
 
+    const note = await Note.get(+req.params.id);
+    return res.json(note);
 })
 
 
