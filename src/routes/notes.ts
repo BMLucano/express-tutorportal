@@ -74,6 +74,18 @@ router.post("/", tutorAuth, async function(req: Request, res: Response,
 router.patch("/:id", tutorAuth, async function(req: Request, res: Response,
   next: NextFunction){
 
+    try{
+      const data = updateNoteSchema.parse(req.body);
+      const note = await Note.update(+req.params.id, data);
+
+      return res.json(note);
+    }catch(error){
+      if(error instanceof z.ZodError){
+        const errs = error.issues.map((issue) => issue.message).join(", ");
+        return next(new BadRequestError(errs));
+      }
+      return next(error);
+    }
 })
 
 

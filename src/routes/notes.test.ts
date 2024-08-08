@@ -198,7 +198,7 @@ describe("Notes routes", function(){
     });
   })
 
-  describe.skip("PATCH /notes/:id", function(){
+  describe("PATCH /notes/:id", function(){
 
     test("works: tutor", async function(){
       const resp = await request(app)
@@ -206,11 +206,11 @@ describe("Notes routes", function(){
         .set("Authorization", `Bearer ${tutorToken}`)
         .send({
           title: "New Note1",
-          content_path: "new path1"
+          contentPath: "new path1"
         });
       expect(resp.body).toEqual({
         title: "New Note1",
-        content_path: "new path1",
+        contentPath: "new path1",
         studentUsername: "u1",
         id: testNoteIds[0],
         sessionId: testSessionIds[0],
