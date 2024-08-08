@@ -3,7 +3,7 @@ import { z } from "zod";
 const createNoteSchema = z.object({
   studentUsername: z.string(),
   title: z.string(),
-  contentPath: z.string().optional(),
+  contentPath: z.string().nullable(),
   sessionId: z.number(),
 }).strict();
 

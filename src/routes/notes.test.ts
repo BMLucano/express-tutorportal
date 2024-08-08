@@ -127,7 +127,7 @@ describe("Notes routes", function(){
     });
   })
 
-  describe.skip("POST /notes", function(){
+  describe("POST /notes", function(){
 
     test("works", async function(){
       const resp = await request(app)
@@ -146,6 +146,7 @@ describe("Notes routes", function(){
         sessionId: testSessionIds[0],
         id: expect.any(Number),
       });
+      expect(resp.statusCode).toEqual(201);
     });
 
     test("unauth for student", async function(){

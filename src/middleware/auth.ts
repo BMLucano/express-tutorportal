@@ -36,6 +36,10 @@ function jwtAuth(req: Req, res: Response, next: NextFunction){
  */
 
 function studentAuth(req: Request, res: Response, next: NextFunction){
+  if (!res.locals.user) {
+    throw new UnauthorizedError();
+  }
+
   if(res.locals.user.role === 'student') return next();
   throw new UnauthorizedError();
 }
@@ -45,6 +49,10 @@ function studentAuth(req: Request, res: Response, next: NextFunction){
  */
 
 function tutorAuth(req: Request, res: Response, next: NextFunction){
+  if (!res.locals.user) {
+    throw new UnauthorizedError();
+  }
+
   if (res.locals.user.role === 'tutor') return next();
   throw new UnauthorizedError();
 }

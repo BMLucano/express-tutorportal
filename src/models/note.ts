@@ -214,7 +214,7 @@ type NoteDataToUpdate = {
 type NoteDataToCreate = {
   studentUsername: string,
   title: string,
-  contentPath: string,
+  contentPath: string | null,
   sessionId: number
 }
 
