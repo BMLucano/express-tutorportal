@@ -5,7 +5,7 @@ import { studentAuth, tutorAuth, ensureUser } from "../middleware/auth";
 import Note, { NoteData } from "../models/note";
 import { createNoteSchema, updateNoteSchema } from "../schemas/notes";
 import { z } from "zod";
-import { BadRequestError } from "../expressError";
+import { BadRequestError, NotFoundError } from "../expressError";
 
 /*** Routes for handling note retrieveal, creation, updating, and deleting*/
 
@@ -99,6 +99,10 @@ router.patch("/:id", tutorAuth, async function(req: Request, res: Response,
 router.delete("/:id", tutorAuth, async function(req: Request, res: Response,
   next: NextFunction){
 
+    if(isNaN(+req.params.id)) throw new NotFoundError();
+
+    await Note.delete(+req.params.id);
+    return res.json({"deleted": +req.params.id})
   })
 
 export default router;

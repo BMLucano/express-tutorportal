@@ -272,7 +272,7 @@ describe("Notes routes", function(){
     });
   });
 
-  describe.skip("DELETE /notes/:id", function(){
+  describe("DELETE /notes/:id", function(){
 
     test("works - tutor", async function(){
       const resp = await request(app)
@@ -296,9 +296,9 @@ describe("Notes routes", function(){
 
     test("not found for no such note", async function(){
       const resp = await request(app)
-        .delete(`/notes/notanote`)
+        .delete(`/notes/nope`)
         .set("Authorization", `Bearer ${tutorToken}`);
-      expect(resp.statusCode).toEqual(401);
+      expect(resp.statusCode).toEqual(404);
     });
   });
 })

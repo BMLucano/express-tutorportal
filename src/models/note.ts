@@ -94,7 +94,7 @@ class Note {
     [id]
     );
     const note = result.rows[0];
-
+    console.log("did i get here?")
     if(!note)
       throw new NotFoundError(`No note found with id: ${id}`);
   }
