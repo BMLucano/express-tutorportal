@@ -13,25 +13,22 @@ interface Req extends Request {
  * Middleware to authenticate jwt.
  * Verifies jwt and stores token payload on res.locals
  *
- * Error if not a valid token or no header provided.
+ * No error if valid token not provided.
  */
 function jwtAuth(req: Req, res: Response, next: NextFunction){
   const authHeader = req.headers?.authorization;
 
-  if (!authHeader) {
-    throw new UnauthorizedError("Unauthorized");
+  if (authHeader) {
+    const token = authHeader.replace(/^[Bb]earer\s+/, "").trim();
+
+    try {
+      res.locals.user = jwt.verify(token, SECRET_KEY);
+    } catch (err) {
+      console.error('JWT verification failed:', err);
+    }
   }
 
-  const token = authHeader.replace(/^[Bb]earer\s+/, "").trim();
-
-  try {
-    res.locals.user = jwt.verify(token, SECRET_KEY);
-    console.log("jwtAuth res.local.user", res.locals.user)
-    return next();
-  } catch (err) {
-    console.error('JWT verification failed:', err);
-    throw new UnauthorizedError();
-  }
+  return next();
 }
 
 /**
@@ -48,7 +45,6 @@ function studentAuth(req: Request, res: Response, next: NextFunction){
  */
 
 function tutorAuth(req: Request, res: Response, next: NextFunction){
-  console.log("req and res", req, res)
   if (res.locals.user.role === 'tutor') return next();
   throw new UnauthorizedError();
 }

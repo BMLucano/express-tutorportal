@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect, vi, beforeAll, beforeEach, afterAll, afterEach } from "vitest";
 import jest from 'jest';
 import { UnauthorizedError } from "../expressError";
 
@@ -19,6 +19,29 @@ function createMockResponse(): Response {
     send: vi.fn(),
   } as unknown as Response;
 }
+// import {
+//   commonBeforeAll,
+//   commonBeforeEach,
+//   commonAfterEach,
+//   commonAfterAll,
+// } from "../models/helpers/_testCommon";
+
+// beforeEach(async () => {
+//   await commonBeforeEach();
+// });
+
+// beforeAll(async () => {
+//   await commonBeforeAll();
+// });
+
+
+// afterEach(async () => {
+//   await commonAfterEach();
+// });
+
+// afterAll(async () => {
+//   await commonAfterAll();
+// });
 
 // function next(err?: Error | string) {
 //   if (err) throw new Error("Got error from middleware");
@@ -43,32 +66,24 @@ describe("auth middleware", function(){
       expect(next).toHaveBeenCalled();
     });
 
-    test("unauth: no header", function() {
+    test("works: no header", function() {
       const req = {} as Request;
       const res = createMockResponse();
 
-      try {
-        jwtAuth(req, res, next);
-      } catch (err) {
-        expect(err).toBeInstanceOf(UnauthorizedError);
-      }
+      jwtAuth(req, res, next);
 
-      expect(res.status).not.toHaveBeenCalled();
-      expect(res.send).not.toHaveBeenCalled();
+      expect(res.locals).not.toHaveProperty("user")
+      expect(next).toHaveBeenCalled()
     });
 
-    test("unauth: wrong jwt signature", function() {
+    test("works: wrong jwt signature", function() {
       const req = { headers: { authorization: `Bearer ${badJwt}` } } as Request;
       const res = createMockResponse();
 
-      try {
-        jwtAuth(req, res, next);
-      } catch (err) {
-        expect(err).toBeInstanceOf(UnauthorizedError);
-      }
+      jwtAuth(req, res, next);
 
-      expect(res.status).not.toHaveBeenCalled();
-      expect(res.send).not.toHaveBeenCalled();
+      expect(res.locals).not.toHaveProperty("user")
+      expect(next).toHaveBeenCalled()
     });
   })
 
