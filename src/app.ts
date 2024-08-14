@@ -7,6 +7,7 @@ import {ExpressError, NotFoundError } from "./expressError";
 import authRoutes from "./routes/auth";
 import dashboardRoutes from "./routes/dashboard";
 import noteRoutes from "./routes/notes";
+import resourceRoutes from "./routes/resources";
 
 import { jwtAuth } from "./middleware/auth";
 // import { add } from "./add.js";
@@ -18,6 +19,7 @@ app.use(jwtAuth);
 app.use("/dashboard", dashboardRoutes)
 app.use("/auth", authRoutes);
 app.use("/notes", noteRoutes);
+app.use("/resources", resourceRoutes);
 
 /** Sample route */
 // app.get("/", function (req: Request, res: Response) {

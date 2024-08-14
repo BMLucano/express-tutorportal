@@ -19,6 +19,8 @@ import { BadRequestError, NotFoundError } from "../expressError";
 router.get("/", ensureUser, async function(req: Request, res: Response,
   next: NextFunction){
 
+    const resources = await Resource.getAll();
+    return res.json(resources);
 });
 
 
@@ -71,3 +73,5 @@ router.delete("/:id", tutorAuth, async function(req: Request, res: Response,
   next: NextFunction){
 
 });
+
+export default router;
