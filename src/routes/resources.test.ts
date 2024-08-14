@@ -11,7 +11,6 @@ import {
   commonAfterEach,
   commonAfterAll,
   testResourceIds,
-  testSessionIds
 } from "../models/helpers/_testCommon";
 
 beforeEach(async () => {
@@ -200,5 +199,92 @@ describe("Resources routes", function(){
     });
   });
 
+  describe("PATCH /resources/:id", function(){
 
-})
+    test("works for tutor", async function(){
+      const resp = await request(app)
+        .patch(`/resources/${testResourceIds[0]}`)
+        .set("Authorization", `Bearer ${tutorToken}`)
+        .send({
+          url: "updatedurl.com"
+        });
+      expect(resp.body).toEqual({
+        studentUsername: "u1",
+        title: "Resource1",
+        url: "updatedurl.com",
+        description: "Desc1",
+        id: expect.any(Number),
+      });
+    });
+
+    test("not found for no such note", async function(){
+      const resp = await request(app)
+        .patch(`/resources/nope`)
+        .set("Authorization", `Bearer ${tutorToken}`)
+        .send({
+          url: "updatedurl.com"
+        });
+      expect(resp.statusCode).toEqual(400);
+    });
+
+    test("unauth for student", async function(){
+      const resp = await request(app)
+        .patch(`/resources/${testResourceIds[0]}`)
+        .set("Authorization", `Bearer ${studentToken}`)
+        .send({
+          title:"New Title1"
+        });
+      expect(resp.statusCode).toEqual(401)
+    });
+
+    test("unauth for anon", async function(){
+      const resp = await request(app)
+        .patch(`/resources/${testResourceIds[0]}`)
+        .send({
+          title:"New Title1"
+        });
+      expect(resp.statusCode).toEqual(401)
+    });
+
+    test("bad request: invalid data (wrong data type)", async function(){
+      const resp = await request(app)
+        .patch(`/resources/${testResourceIds[0]}`)
+        .set("Authorization", `Bearer ${tutorToken}`)
+        .send({
+          title: 123,
+        });
+      expect(resp.statusCode).toEqual(400);
+    });
+
+    });
+
+    describe("DELETE /resources/:id", function(){
+
+      test("works - tutor", async function(){
+        const resp = await request(app)
+          .delete(`/resources/${testResourceIds[0]}`)
+          .set("Authorization", `Bearer ${tutorToken}`);
+        expect(resp.body).toEqual({"deleted": testResourceIds[0]});
+      });
+
+      test("unauth for student", async function(){
+        const resp = await request(app)
+          .delete(`/resources/${testResourceIds[0]}`)
+          .set("Authorization", `Bearer ${studentToken}`);
+        expect(resp.statusCode).toEqual(401);
+      });
+
+      test("unauth for anon", async function(){
+        const resp = await request(app)
+          .delete(`/resources/${testResourceIds[0]}`)
+        expect(resp.statusCode).toEqual(401);
+      });
+
+      test("not found for no such note", async function(){
+        const resp = await request(app)
+          .delete(`/resources/nope`)
+          .set("Authorization", `Bearer ${tutorToken}`);
+        expect(resp.statusCode).toEqual(404);
+      });
+    })
+  })
