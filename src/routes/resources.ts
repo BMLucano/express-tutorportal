@@ -34,6 +34,12 @@ router.get("/", ensureUser, async function(req: Request, res: Response,
 router.get("/:id", ensureUser, async function(req: Request, res: Response,
   next: NextFunction){
 
+
+    if(isNaN(+req.params.id)) throw new NotFoundError();
+
+    const resource = await Resource.get(+req.params.id);
+    return res.json(resource);
+
 });
 
 
