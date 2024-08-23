@@ -51,13 +51,6 @@ describe("Resources routes", function(){
             url: "url1",
             description: "Desc1",
           },
-          {
-            id: testResourceIds[1],
-            studentUsername: "u2",
-            title: "Resource2",
-            url: "url2",
-            description: "Desc2",
-          },
         ]);
     });
 

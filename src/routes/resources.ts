@@ -13,6 +13,8 @@ import { BadRequestError, NotFoundError } from "../expressError";
 
 /**
  * GET /resources: get all resources
+ * **for tutors: get all in db
+ * **for students: get all by username
  *
  * Auth required: tutor or student
  *
@@ -21,8 +23,13 @@ import { BadRequestError, NotFoundError } from "../expressError";
 router.get("/", ensureUser, async function(req: Request, res: Response,
   next: NextFunction){
 
-    const resources = await Resource.getAll();
-    return res.json(resources);
+    if(res.locals.user.role === "tutor"){
+      const resources = await Resource.getAll();
+      return res.json(resources);
+    }else if(res.locals.user.role === "student"){
+      const resources = await Resource.getResourcesByStudent(res.locals.user.username);
+      return res.json(resources);
+    }
 });
 
 
