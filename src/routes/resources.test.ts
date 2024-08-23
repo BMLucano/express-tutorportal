@@ -127,7 +127,7 @@ describe("Resources routes", function(){
     });
   });
 
-  describe.skip("POST /resources", function(){
+  describe("POST /resources", function(){
 
     test("works for tutor", async function(){
       const resp = await request(app)

@@ -3,8 +3,10 @@ const router: Router = express.Router();
 
 import { studentAuth, tutorAuth, ensureUser } from "../middleware/auth";
 import Resource, { ResourceData } from "../models/resource";
-// import { createNoteSchema, updateNoteSchema } from "../schemas/notes";
+
 import { z } from "zod";
+import { createResourceSchema, updateResourceSchema } from "../schemas/resources";
+
 import { BadRequestError, NotFoundError } from "../expressError";
 
 /** Routes for handling resource retrieval, creation, updating, and deleting */
@@ -53,6 +55,18 @@ router.get("/:id", ensureUser, async function(req: Request, res: Response,
 router.post("/", tutorAuth, async function(req: Request, res: Response,
   next: NextFunction){
 
+    try{
+      const data = createResourceSchema.parse(req.body);
+      const resource = await Resource.create(data);
+
+      return res.status(201).json(resource);
+    }catch(error){
+      if(error instanceof z.ZodError){
+        const errs = error.issues.map((issue) => issue.message).join(", ");
+        return next(new BadRequestError(errs));
+      }
+      return next(error);
+    }
 });
 
 
