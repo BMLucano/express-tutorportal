@@ -51,13 +51,6 @@ describe("Notes routes", function(){
           contentPath: "path1",
           sessionId: testSessionIds[0],
         },
-        {
-          id: testNoteIds[1],
-          studentUsername: "u2",
-          title: "Note2",
-          contentPath: "path2",
-          sessionId: testSessionIds[1],
-        },
       ])
     });
 

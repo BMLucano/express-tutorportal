@@ -11,6 +11,8 @@ import { BadRequestError, NotFoundError } from "../expressError";
 
 /**
  * GET /notes: get all notes
+ * **for tutors: get all in db
+ * **for students: get all by username
  *
  * Auth required: tutor or student
  *
@@ -19,8 +21,13 @@ import { BadRequestError, NotFoundError } from "../expressError";
 router.get('/', ensureUser, async function(req: Request, res: Response,
   next: NextFunction){
 
-    const notes = await Note.getAll();
-    return res.json(notes);
+    if(res.locals.user.role === "tutor"){
+      const notes = await Note.getAll();
+      return res.json(notes);
+    }else if(res.locals.user.role === "student"){
+      const notes = await Note.getNotesByStudent(res.locals.user.username);
+      return res.json(notes);
+    }
 })
 
 
