@@ -199,7 +199,7 @@ describe("Resources routes", function(){
     });
   });
 
-  describe.skip("PATCH /resources/:id", function(){
+  describe("PATCH /resources/:id", function(){
 
     test("works for tutor", async function(){
       const resp = await request(app)
@@ -224,7 +224,7 @@ describe("Resources routes", function(){
         .send({
           url: "updatedurl.com"
         });
-      expect(resp.statusCode).toEqual(400);
+      expect(resp.statusCode).toEqual(404);
     });
 
     test("unauth for student", async function(){

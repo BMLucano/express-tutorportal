@@ -80,6 +80,21 @@ router.post("/", tutorAuth, async function(req: Request, res: Response,
 router.patch("/:id", tutorAuth, async function(req: Request, res: Response,
   next: NextFunction){
 
+    if(isNaN(+req.params.id)) throw new NotFoundError();
+
+    try{
+      const data = updateResourceSchema.parse(req.body);
+      const resource = await Resource.update(+req.params.id, data);
+
+      return res.json(resource);
+    }catch(error){
+      if(error instanceof z.ZodError){
+        const errs = error.issues.map((issue) => issue.message).join(", ");
+        return next(new BadRequestError(errs));
+      }
+      return next(error);
+    }
+
 });
 
 /**
