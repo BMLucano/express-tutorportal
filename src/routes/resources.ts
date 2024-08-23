@@ -107,6 +107,11 @@ router.patch("/:id", tutorAuth, async function(req: Request, res: Response,
 router.delete("/:id", tutorAuth, async function(req: Request, res: Response,
   next: NextFunction){
 
+    if(isNaN(+req.params.id)) throw new NotFoundError();
+
+    await Resource.delete(+req.params.id);
+    return res.json({"deleted": +req.params.id});
+
 });
 
 export default router;

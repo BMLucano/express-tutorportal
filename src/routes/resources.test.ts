@@ -258,7 +258,7 @@ describe("Resources routes", function(){
 
     });
 
-    describe.skip("DELETE /resources/:id", function(){
+    describe("DELETE /resources/:id", function(){
 
       test("works - tutor", async function(){
         const resp = await request(app)
