@@ -86,4 +86,42 @@ describe("Sessions routes", async function(){
       expect(resp.statusCode).toEqual(401);
     });
   })
+
+  describe("GET /sessions/:id", function(){
+
+    test("works for student", async function(){
+      const session = await Session.create({
+        studentUsername: "u1",
+        date: "2024-09-05",
+        time: "10:00:00",
+        duration: "01:00:00",
+        notes: "test",
+      });
+      const resp = await request(app)
+        .get(`/sessions/${session.id}`)
+        .set("Authorization", `Bearer ${studentToken}`);
+      expect(resp.body).toEqual({...session, id: session.id});
+    })
+
+    test("works for tutor", async function(){
+      const session = await Session.create({
+        studentUsername: "u1",
+        date: "2024-09-05",
+        time: "10:00:00",
+        duration: "01:00:00",
+        notes: "test",
+      });
+      const resp = await request(app)
+        .get(`/sessions/${session.id}`)
+        .set("Authorization", `Bearer ${tutorToken}`);
+      expect(resp.body).toEqual({...session, id: session.id});
+    });
+
+    test("not found", async function(){
+      const resp = await request(app)
+        .get("/sessions/blah")
+        .set("Authorization", `Bearer ${studentToken}`);
+      expect(resp.statusCode).toEqual(404);
+    });
+  })
 })
