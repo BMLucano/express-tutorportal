@@ -123,5 +123,83 @@ describe("Sessions routes", async function(){
         .set("Authorization", `Bearer ${studentToken}`);
       expect(resp.statusCode).toEqual(404);
     });
+  });
+
+  describe("POST /sessions", function(){
+
+    test("works for tutor", async function(){
+      const resp = await request(app)
+        .post("/sessions")
+        .set("Authorization", `Bearer ${tutorToken}`)
+        .send({
+          studentUsername: "u1",
+          date: "2024-09-05",
+          time: "08:00:00",
+          duration: "02:00:00",
+          notes: "test",
+        });
+      expect(resp.body).toEqual({
+        studentUsername: "u1",
+        date: "2024-09-05",
+        time: "08:00:00",
+        duration: "02:00:00",
+        notes: "test",
+        id: expect.any(Number),
+      });
+      expect(resp.statusCode).toEqual(201);
+    })
+
+    test("unauth for student", async function(){
+      const resp = await request(app)
+        .post("/sessions")
+        .set("Authorization", `Bearer ${studentToken}`)
+        .send({
+          studentUsername: "u1",
+          date: "2024-09-05",
+          time: "08:00:00",
+          duration: "02:00:00",
+          notes: "test",
+        });
+        expect(resp.statusCode).toEqual(401);
+    });
+
+    test("unauth for anon", async function(){
+      const resp = await request(app)
+        .post("/sessions")
+        .send({
+          studentUsername: "u1",
+          date: "2024-09-05",
+          time: "08:00:00",
+          duration: "02:00:00",
+          notes: "test",
+        });
+        expect(resp.statusCode).toEqual(401);
+    });
+
+    test("bad request: invalid data (number instead of string)", async function(){
+      const resp = await request(app)
+        .post("/sessions")
+        .set("Authorization", `Bearer ${tutorToken}`)
+        .send({
+          studentUsername: "u1",
+          date: "2024-09-05",
+          time: "08:00:00",
+          duration: "02:00:00",
+          notes: 123,
+        });
+      expect(resp.statusCode).toEqual(400);
+    });
+
+    test("bad request: missing data", async function(){
+      const resp = await request(app)
+        .post("/sessions")
+        .set("Authorization", `Bearer ${tutorToken}`)
+        .send({
+          studentUsername: "u1",
+          notes: "test",
+        });
+      expect(resp.statusCode).toEqual(400);
+
+    })
   })
 })
